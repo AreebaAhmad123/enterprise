@@ -24,3 +24,14 @@
     <% end %>
   </tbody>
 </table>
+<h2 class="text-xl mb-2">Meeting Calendar</h2>
+<%= month_calendar(events: @meetings, attribute: :start_time) do |date, meetings| %>
+  <div class="border p-2">
+    <%= date %>
+    <% meetings.each do |meeting| %>
+      <div class="text-sm text-blue-600">
+        <%= meeting.start_time.strftime('%H:%M') %> - <%= meeting.user.email %> (<%= meeting.status %>)
+      </div>
+    <% end %>
+  </div>
+<% end %>
