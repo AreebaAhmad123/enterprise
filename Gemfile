@@ -63,3 +63,5 @@ gem 'sidekiq'
 gem "tailwindcss-rails"
 
 gem 'pundit'
+
+gem "cssbundling-rails", "~> 1.4"

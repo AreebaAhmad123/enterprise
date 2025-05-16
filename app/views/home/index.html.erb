@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulting Session Scheduler - Main</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    .hover-scale {
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    .hover-scale:hover {
+      transform: scale(1.03);
+      background-color: #f7f7f7;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-100 flex flex-col font-sans">
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+    <!-- Hero Section -->
+    <section class="text-center max-w-3xl mx-auto mb-16 md:mb-24 animate-fade-in">
+      <h2 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4 md:mb-6 leading-tight">
+        Schedule Your Sessions Seamlessly
+      </h2>
+      <p class="text-base md:text-lg text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto">
+        Effortlessly book, manage, and pay for consulting sessions in one intuitive platform.
+      </p>
+      <div class="flex justify-center space-x-4">
+        <a href="<%= new_user_registration_path %>" class="inline-block bg-black text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-gray-800 transition-colors shadow-md">
+          Get Started
+        </a>
+        <a href="#features" class="inline-block text-black px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-semibold hover:text-gray-700 transition-colors border border-black">
+          Learn More
+        </a>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-5xl mx-auto">
+      <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in">
+        <div class="text-3xl mb-4">📅</div>
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Responsive Scheduling</h3>
+        <p class="text-sm md:text-base text-gray-600">Interactive monthly and weekly calendars with simple_calendar.</p>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in" style="animation-delay: 0.1s;">
+        <div class="text-3xl mb-4">💬</div>
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Real-Time Comments</h3>
+        <p class="text-sm md:text-base text-gray-600">Engage with rich text and live updates via Trix.</p>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in" style="animation-delay: 0.2s;">
+        <div class="text-3xl mb-4">💳</div>
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Secure Payments</h3>
+        <p class="text-sm md:text-base text-gray-600">Fast and safe transactions with Stripe integration.</p>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in" style="animation-delay: 0.3s;">
+        <div class="text-3xl mb-4">📊</div>
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Admin Dashboard</h3>
+        <p class="text-sm md:text-base text-gray-600">Monitor and manage sessions with insightful analytics.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

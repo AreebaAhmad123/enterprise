@@ -1,84 +1,102 @@
 # Consulting Session Scheduler
 
-A Ruby on Rails web application for consultants and clients to schedule, manage, and pay for consulting sessions.
+This is a Ruby on Rails app that lets consultants and clients book, manage, and pay for sessions online. Clients can sign up, book sessions, comment, pay with Stripe, and get emails. Admins can manage users and sessions from a dashboard.
 
-## Task Status
+## Features
+- Clients: Sign up, log in, book or cancel sessions, see free time slots, add comments, pay with Stripe, get email confirmations.
+- Admins: See a dashboard, manage users and sessions, cancel sessions, filter sessions.
+- Tech used: Ruby on Rails, PostgreSQL, Devise, Tailwind CSS, Trix Editor, Stripe, simple_calendar, Sidekiq, Foreman.
 
-### Completed Tasks
-- **Project Setup**:
-  - Created Rails app with PostgreSQL.
-  - Added gems: `devise`, `simple_calendar`, `stripe`, `sidekiq`, `foreman`, `trix-rails`, `tailwindcss-rails`.
-  - Set up Tailwind CSS and Foreman.
-- **Authentication**:
-  - Configured Devise for user registration/login.
-  - Added User model with `client` and `admin` roles.
-  - Generated Devise views.
-- **Models and Relationships**:
-  - Created `User`, `Meeting`, `Comment`, `Payment` models.
-  - Defined relationships and validations.
-- **Routes**:
-  - Set up nested routes for users, meetings, comments, payments.
-  - Added admin namespace routes.
-- **Controllers**:
-  - Implemented `MeetingsController` (index, show, new, create, destroy).
-  - Implemented `CommentsController` (create with Ajax).
-  - Implemented `PaymentsController` (new, create with Stripe).
-  - Implemented `Admin::DashboardController` (index).
-- **Views**:
-  - Created application layout with Tailwind CSS.
-  - Added meetings index with `simple_calendar`.
-  - Added meeting show page with Trix Editor for comments.
-  - Set up admin dashboard view.
-- **Stripe Integration**:
-  - Configured Stripe Checkout.
-  - Stored card brand and last 4 digits in `Payment` model.
-- **Email Notifications**:
-  - Set up `MeetingMailer` for booking confirmations and payment receipts.
-  - Added mailer views and previews.
-- **Background Jobs**:
-  - Configured Sidekiq with Redis.
-- **Initial Testing**:
-  - Provided instructions to run app and create admin user.
+## Done Tasks
+All planned tasks are finished:
 
-### Remaining Tasks
-- **Calendar Enhancements**:
-  - Customize `simple_calendar` for dynamic time slots.
-  - Ensure responsive, mobile-first calendar UI.
-- **Admin Dashboard Analytics**:
-  - Add analytics for bookings and revenue.
-  - Implement charts (e.g., Chart.js).
-- **Session Filtering for Admin**:
-  - Add filters for upcoming, past, canceled sessions.
-  - Implement filter UI.
-- **Payment Enhancements**:
-  - Display payment status in admin dashboard.
-  - Add refund functionality (optional).
-- **Real-Time Comments**:
-  - Test Ajax comment submission.
-  - Add comment editing/deletion (optional).
-- **Email Notifications**:
-  - Add cancellation notifications.
-  - Style email templates.
-- **Testing**:
-  - Write RSpec tests for models and controllers.
-  - Test mailers.
-- **Deployment**:
-  - Deploy to Heroku/Render.
-  - Configure production environment variables.
-- **Security and Optimization**:
-  - Add authorization (e.g., Pundit).
-  - Optimize database queries.
-  - Handle Stripe webhooks.
-- **User Experience**:
-  - Polish UI with Tailwind CSS.
-  - Add client profile page.
-  - Implement session rescheduling (optional).
+- Project Setup:
+  - Started a Rails app with PostgreSQL.
+  - Added Tailwind CSS for styling.
+  - Set up a Git repo.
 
-## Setup Instructions
-1. Clone the repository: `git clone https://github.com/areeba/enterprise.git`
-2. Install dependencies: `bundle install`
-3. Set up environment variables in `.env` (e.g., Stripe keys).
-4. Create and migrate database: `rails db:create db:migrate`
-5. Start Redis: `redis-server`
-6. Run the app: `foreman start`
-7. Access at `http://localhost:3000`
+- User Login and Roles:
+  - Added Devise for login and signup.
+  - Made a User model with client and admin roles.
+  - Added checks to block non-admins from admin pages.
+
+- Booking Sessions:
+  - Made a Meeting model to handle sessions.
+  - Added simple_calendar for a calendar view.
+  - Built monthly and weekly calendar views with free time slots.
+  - Created a booking page for clients.
+  - Made a dashboard for clients to see upcoming sessions.
+  - Added a way for clients to cancel sessions.
+  - Built a system for admins to see all sessions.
+  - Gave admins power to cancel any session.
+  - Added a calendar for admins to see all bookings.
+
+- Comments:
+  - Made a Comment model for session notes.
+  - Added Trix Editor for rich text comments.
+  - Built a comment system that updates without reloading.
+
+- Payments:
+  - Set up Stripe for testing.
+  - Added a checkout page for clients to pay.
+  - Linked payments to the Meeting model.
+  - Saved card details safely (brand, last 4 digits).
+
+- Emails:
+  - Set up Action Mailer to send emails.
+  - Made an email template for booking confirmations.
+  - Made an email template for payment receipts.
+  - Added a way to preview emails for testing.
+
+- Admin Dashboard:
+  - Built a dashboard for admins.
+  - Added a page to manage users (edit or delete).
+  - Added filters to sort sessions by date, user, or status.
+
+- Quality Checks:
+  - Added checks for inputs and access with Pundit.
+
+## Future Tasks
+Here are ideas to make the app better:
+
+- Calendar:
+  - Let users drag and drop to reschedule sessions.
+  - Add support for different time zones.
+
+- Admin Analytics:
+  - Show charts for revenue and bookings with Chart.js.
+  - Let admins download data as a CSV file.
+
+- Payments:
+  - Add Stripe webhooks to update payment status instantly.
+  - Let admins issue refunds.
+
+- Comments:
+  - Add options to edit or delete comments.
+  - Send email alerts for new comments.
+
+- Emails:
+  - Send emails when sessions are canceled.
+  - Make email templates look nicer with HTML/CSS.
+
+- Testing:
+  - Write RSpec tests for models, controllers, and emails.
+  - Use GitHub Actions for automatic testing.
+
+- Deployment:
+  - Put the app on Heroku or Render.
+  - Optimize Sidekiq and PostgreSQL for live use.
+
+- Security:
+  - Check Pundit rules for rare cases.
+  - Limit API requests to prevent abuse.
+
+- User Experience:
+  - Add a client profile page to see session and payment history.
+  - Improve the look with animations and better Tailwind CSS.
+
+## How to Set Up
+1. Clone the Repo:
+   ```bash
+   git clone https://github.com/AreebaAhmad123/enterprise.git
+   cd enterprise

@@ -1,37 +1,48 @@
-# <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Consulting Scheduler</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
     <%= javascript_include_tag 'application' %>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'trix' %>
     <%= javascript_include_tag 'trix' %>
+
+    <!-- Tailwind enhancements -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
-  <body class="bg-gray-100">
-    <nav class="bg-blue-600 p-4">
-      <div class="container mx-auto flex justify-between">
-        <%= link_to 'Consulting Scheduler', root_path, class: 'text-white font-bold' %>
-        <div>
+
+  <body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-blue-700 shadow-md">
+      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <%= link_to '📅 Consulting Scheduler', root_path, class: 'text-white font-semibold text-xl' %>
+
+        <div class="space-x-4">
           <% if user_signed_in? %>
-            <%= link_to 'Profile', user_meetings_path(current_user), class: 'text-white mr-4' %>
-            <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'text-white' %>
+            <%= link_to 'Profile', user_meetings_path(current_user), class: 'text-white hover:text-gray-200 transition' %>
             <% if current_user.role == 'admin' %>
-              <%= link_to 'Admin Dashboard', admin_dashboard_path, class: 'text-white mr-4' %>
+              <%= link_to 'Admin Dashboard', admin_dashboard_path, class: 'text-white hover:text-gray-200 transition' %>
             <% end %>
+            <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'text-white hover:text-red-200 transition' %>
           <% else %>
-            <%= link_to 'Login', new_user_session_path, class: 'text-white mr-4' %>
-            <%= link_to 'Sign Up', new_user_registration_path, class: 'text-white' %>
+            <%= link_to 'Login', new_user_session_path, class: 'text-white hover:text-gray-200 transition' %>
+            <%= link_to 'Sign Up', new_user_registration_path, class: 'bg-white text-blue-700 font-medium px-3 py-1 rounded hover:bg-blue-100 transition' %>
           <% end %>
         </div>
       </div>
     </nav>
-    <div class="container mx-auto p-4">
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-6">
       <%= yield %>
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t text-center text-sm text-gray-500 py-4">
+      &copy; <%= Time.now.year %> Consulting Scheduler. All rights reserved.
+    </footer>
   </body>
 </html>

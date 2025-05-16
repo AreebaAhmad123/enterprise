@@ -18,6 +18,7 @@ default: &default
   username: areeba
   password: 1234
   host: localhost
+  port: 5433
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -88,5 +89,5 @@ test:
 production:
   <<: *default
   database: myapp_production
-  username: myapp
+  username: areeba
   password: <%= ENV["MYAPP_DATABASE_PASSWORD"] %>
