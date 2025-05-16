@@ -1,138 +1,149 @@
-# 💼 Consulting Session Scheduler
+# Consulting Session Scheduler
 
-A full-featured **Ruby on Rails** web application that allows consultants and clients to seamlessly schedule, manage, and pay for sessions online. Clients can book sessions, leave comments, and make payments, while admins can oversee all activities through a powerful dashboard.
+A Ruby on Rails web application that enables consultants and clients to manage bookings, payments, and communication efficiently.
 
----
+## Features
 
-## 🚀 Features
+- User Authentication (Sign Up, Log In) using Devise
+- Calendar Scheduling System with simple_calendar
+- Real-time Comments using Turbo Streams
+- Stripe Payment Integration
+- Admin Dashboard with Analytics
+- Email Notifications
+- Responsive UI with Tailwind CSS
 
-### Clients
+## Tech Stack
 
-* Sign up and log in securely using Devise
-* View available time slots through responsive calendar views
-* Book and cancel consulting sessions
-* Add real-time rich-text comments using Trix Editor
-* Pay securely via Stripe
-* Receive email confirmations and payment receipts
+- Ruby on Rails 7.2
+- PostgreSQL
+- Tailwind CSS
+- Devise (Authentication)
+- Stripe (Payments)
+- Turbo Streams (Real-time Updates)
+- Sidekiq (Background Jobs)
 
-### Admins
+## Prerequisites
 
-* Access a dedicated admin dashboard
-* View and manage all user sessions
-* Cancel sessions and filter them by date, user, or status
-* Manage users with options to edit or delete accounts
-* Monitor payments and activity through a calendar interface
+- Ruby 3.2.0 or higher
+- PostgreSQL
+- Node.js and Yarn
+- Stripe Account
 
----
+## Installation
 
-## 🧱 Technologies Used
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd consulting-session-scheduler
+   ```
 
-* **Backend**: Ruby on Rails, PostgreSQL
-* **Authentication**: Devise, Pundit
-* **Styling**: Tailwind CSS
-* **Calendar**: simple\_calendar gem
-* **Comments**: Trix Editor with AJAX
-* **Payments**: Stripe API
-* **Background Jobs**: Sidekiq
-* **Process Management**: Foreman
-* **Email Handling**: Action Mailer
+2. Install dependencies:
+   ```bash
+   bundle install
+   yarn install
+   ```
 
----
+3. Set up the database:
+   ```bash
+   rails db:create db:migrate
+   ```
 
-## ✅ Completed Tasks
+4. Configure environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` and add your configuration:
+   - `STRIPE_PUBLISHABLE_KEY`
+   - `STRIPE_SECRET_KEY`
+   - `SMTP_USERNAME`
+   - `SMTP_PASSWORD`
 
-### Project Setup
+5. Start the server:
+   ```bash
+   ./bin/dev
+   ```
 
-* Initialized Rails app with PostgreSQL
-* Integrated Tailwind CSS for modern styling
-* Set up version control with Git
+## Usage
 
-### User Authentication & Roles
+### User Roles
 
-* Added Devise for user registration and login
-* Implemented client and admin roles
-* Restricted admin routes and views with Pundit
+1. **Client**
+   - Create and manage sessions
+   - Make payments
+   - Add comments to sessions
 
-### Session Booking
+2. **Consultant**
+   - View assigned sessions
+   - Manage session status
+   - Respond to comments
 
-* Created a Meeting model to manage consulting sessions
-* Integrated simple\_calendar for interactive calendar views
-* Built booking interfaces for clients
-* Developed dashboards for both clients and admins
-* Enabled session cancellation and filtering features
+3. **Admin**
+   - Access admin dashboard
+   - Manage all sessions
+   - View analytics
+   - Manage users
 
-### Real-Time Comments
+### Session Management
 
-* Created a Comment model associated with sessions
-* Integrated Trix Editor for rich-text input
-* Enabled AJAX-based updates for seamless user experience
+1. Create a new session:
+   - Click "New Session"
+   - Fill in session details
+   - Select consultant
+   - Choose date and time
 
-### Payments
+2. View sessions:
+   - Calendar view shows all sessions
+   - List view shows upcoming sessions
+   - Filter by status or date
 
-* Connected Stripe Checkout for secure payments
-* Linked transactions to Meeting records
-* Safely stored non-sensitive card details (brand and last 4 digits)
-* Sent confirmation emails after successful payments
-
-### Email Notifications
-
-* Configured Action Mailer
-* Designed email templates for session confirmations and payment receipts
-* Enabled email previews in development for testing
-
-### Admin Dashboard
-
-* Built an admin panel with full control over users and sessions
-* Added filtering by date, user, and status
-* Included user management tools
-
-### Quality & Security
-
-* Added input validations and role-based access control
-* Used Pundit to secure sensitive routes and actions
-
----
-
-## 🔮 Future Enhancements
-
-### Calendar
-
-* Implement drag-and-drop session rescheduling
-* Add support for multiple time zones
-
-### Admin Analytics
-
-* Display revenue and session stats using Chart.js
-* Enable CSV data exports
+3. Manage sessions:
+   - Edit session details
+   - Cancel sessions
+   - Add comments
+   - Make payments
 
 ### Payments
 
-* Add Stripe webhooks to update payment statuses in real time
-* Allow admins to issue refunds directly
+1. Make a payment:
+   - Select session
+   - Enter payment details
+   - Confirm payment
 
-### Comments
+2. View payment history:
+   - Access payment history in profile
+   - View payment receipts
+   - Request refunds (if applicable)
 
-* Add edit and delete functionality for comments
-* Send notifications for new comments
+## Development
 
-### Emails
+### Running Tests
 
-* Notify clients when sessions are canceled
-* Improve visual design of email templates
+```bash
+rails test
+```
 
-### Testing & CI
+### Code Style
 
-* Write RSpec tests for models, controllers, and mailers
-* Set up GitHub Actions for automated testing
+```bash
+rubocop
+```
 
-### Deployment & Optimization
+### Background Jobs
 
-* Deploy to Heroku or Render
-* Optimize Sidekiq and PostgreSQL for production
+```bash
+bundle exec sidekiq
+```
 
-### User Experience
+## Contributing
 
-* Create a profile page showing session and payment history
-* Add animations and polish styling with Tailwind CSS
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 

@@ -17,18 +17,24 @@ Rails.application.routes.draw do
   devise_for :users
   root 'home#index'
 
-  resources :users do
-    resources :meetings do
-      resources :comments, only: [:create]
+  resources :sessions do
+    resources :comments, only: [:create, :destroy]
+    resources :payments, only: [:new, :create] do
+      member do
+        get :process_payment
+        post :refund
+      end
     end
   end
+  resources :users do
+  resources :meetings, only: [:index, :new, :create, :edit, :update, :destroy]
+  end
 
-  resources :payments, only: [:new, :create]
 
   namespace :admin do
     get 'dashboard', to: 'dashboard#index'
     resources :users, only: [:index, :destroy]
-    resources :meetings, only: [:index, :destroy]
+    resources :sessions, only: [:index, :show, :edit, :update, :destroy]
     resources :payments, only: [:index]
   end
 end

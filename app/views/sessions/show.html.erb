@@ -1,0 +1,41 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2"><%= @session.title %></h1>
+          <p class="text-gray-600"><%= @session.description %></p>
+        </div>
+        <div class="flex space-x-4">
+          <%= link_to 'Edit', edit_session_path(@session), class: 'text-blue-500 hover:text-blue-700' if policy(@session).edit? %>
+          <%= button_to 'Cancel Session', session_path(@session), method: :delete, class: 'text-red-500 hover:text-red-700', data: { confirm: 'Are you sure?' } if policy(@session).destroy? %>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-900 mb-2">Session Details</h2>
+          <div class="space-y-2">
+            <p><span class="font-medium">Date:</span> <%= @session.start_time.strftime("%B %d, %Y") %></p>
+            <p><span class="font-medium">Time:</span> <%= @session.start_time.strftime("%I:%M %p") %> - <%= @session.end_time.strftime("%I:%M %p") %></p>
+            <p><span class="font-medium">Status:</span> <span class="<%= session_status_color(@session) %>"><%= @session.status.titleize %></span></p>
+            <p><span class="font-medium">Consultant:</span> <%= @session.consultant.name %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Comments</h2>
+      
+      <div id="comments" class="space-y-4 mb-6">
+        <%= render @comments %>
+      </div>
+
+      <div class="border-t pt-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Add a Comment</h3>
+        <%= render 'comments/form', comment: @comment, session: @session %>
+      </div>
+    </div>
+  </div>
+</div> 

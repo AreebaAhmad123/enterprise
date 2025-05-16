@@ -1,0 +1,40 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Consulting Sessions</h1>
+    <%= link_to 'New Session', new_session_path, class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg p-6">
+    <%= month_calendar events: @sessions do |date, sessions| %>
+      <div class="h-24 overflow-y-auto">
+        <div class="font-semibold text-gray-700 mb-1"><%= date.day %></div>
+        <% sessions.each do |session| %>
+          <%= link_to session_path(session), class: "block p-1 mb-1 text-sm rounded #{session_status_color(session)}" do %>
+            <div class="font-medium truncate"><%= session.title %></div>
+            <div class="text-xs"><%= session.start_time.strftime("%I:%M %p") %></div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-8">
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Upcoming Sessions</h2>
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <% @sessions.upcoming.each do |session| %>
+        <div class="bg-white rounded-lg shadow p-4">
+          <h3 class="font-bold text-lg mb-2"><%= session.title %></h3>
+          <p class="text-gray-600 mb-2"><%= session.description %></p>
+          <div class="text-sm text-gray-500">
+            <p>Date: <%= session.start_time.strftime("%B %d, %Y") %></p>
+            <p>Time: <%= session.start_time.strftime("%I:%M %p") %> - <%= session.end_time.strftime("%I:%M %p") %></p>
+            <p>Status: <span class="<%= session_status_color(session) %>"><%= session.status.titleize %></span></p>
+          </div>
+          <div class="mt-4">
+            <%= link_to 'View Details', session_path(session), class: 'text-blue-500 hover:text-blue-700' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div> 

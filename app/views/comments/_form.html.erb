@@ -1,0 +1,23 @@
+<%= form_with(model: [session, comment], id: 'comment_form', class: 'space-y-4') do |form| %>
+  <% if comment.errors.any? %>
+    <div class="bg-red-50 p-4 rounded-md">
+      <div class="text-red-700 font-medium">
+        <%= pluralize(comment.errors.count, "error") %> prohibited this comment from being saved:
+      </div>
+      <ul class="mt-2 list-disc list-inside text-red-600">
+        <% comment.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :content, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.rich_text_area :content, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+  </div>
+
+  <div class="flex justify-end">
+    <%= form.submit 'Post Comment', class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+<% end %> 
