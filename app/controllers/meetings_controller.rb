@@ -7,12 +7,15 @@ class MeetingsController < ApplicationController
     @meetings = @user.meetings
   end
 
+  def new
+    @meeting = @user.meetings.build
+    @date = params[:date] ? Date.parse(params[:date]) : Date.today
+    @available_slots = Meeting.available_slots(@date)
+  end
+
   def show
   end
 
-  def new
-    @meeting = @user.meetings.build
-  end
 
   def create
     @meeting = @user.meetings.build(meeting_params)

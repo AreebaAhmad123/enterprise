@@ -4,4 +4,16 @@ class Meeting < ApplicationRecord
   has_one :payment, dependent: :destroy
   validates :start_time, :duration, :status, presence: true
   validates :status, inclusion: { in: %w[scheduled canceled completed] }
+
+  def self.available_slots(date)
+    slots = []
+    start_hour = 9 # 9 AM
+    end_hour = 17 # 5 PM
+    (start_hour..end_hour).each do |hour|
+      slot_time = date.in_time_zone.beginning_of_day + hour.hours
+      next if exists?(start_time: slot_time)
+      slots << slot_time
+    end
+    slots
+  end
 end

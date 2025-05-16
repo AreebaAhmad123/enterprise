@@ -1,0 +1,8 @@
+<h1 class="text-2xl font-bold mb-4">New Meeting</h1>
+<%= form_with model: [@user, @meeting], local: true do |f| %>
+  <%= f.label :start_time, 'Select Time Slot' %>
+  <%= f.select :start_time, options_for_select(@available_slots.map { |slot| [slot.strftime('%H:%M'), slot] }) %>
+  <%= f.label :duration, 'Duration (minutes)' %>
+  <%= f.number_field :duration, min: 30, max: 120, step: 30, value: 60 %>
+  <%= f.submit 'Book Meeting', class: 'bg-blue-500 text-white px-4 py-2 rounded mt-2' %>
+<% end %>

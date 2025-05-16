@@ -1,10 +1,31 @@
 <h1 class="text-2xl font-bold mb-4">Your Meetings</h1>
 <%= link_to 'New Meeting', new_user_meeting_path(@user), class: 'bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block' %>
-<%= month_calendar(events: @meetings) do |date, meetings| %>
-  <%= date %>
-  <% meetings.each do |meeting| %>
-    <div class="text-sm text-blue-600">
-      <%= meeting.start_time.strftime('%H:%M') %> (<%= meeting.status %>)
+<div class="mb-4">
+  <%= link_to 'Monthly View', user_meetings_path(@user, view: 'month'), class: 'text-blue-500 mr-2' %>
+  <%= link_to 'Weekly View', user_meetings_path(@user, view: 'week'), class: 'text-blue-500' %>
+</div>
+<% if params[:view] == 'week' %>
+  <%= week_calendar(events: @meetings, attribute: :start_time) do |date, meetings| %>
+    <div class="border p-2">
+      <%= date.strftime('%a, %b %d') %>
+      <% meetings.each do |meeting| %>
+        <div class="text-sm text-blue-600">
+          <%= meeting.start_time.strftime('%H:%M') %> (<%= meeting.status %>)
+        </div>
+      <% end %>
+      <%= link_to 'Book', new_user_meeting_path(@user, date: date), class: 'text-green-500 text-sm' %>
+    </div>
+  <% end %>
+<% else %>
+  <%= month_calendar(events: @meetings, attribute: :start_time) do |date, meetings| %>
+    <div class="border p-2">
+      <%= date %>
+      <% meetings.each do |meeting| %>
+        <div class="text-sm text-blue-600">
+          <%= meeting.start_time.strftime('%H:%M') %> (<%= meeting.status %>)
+        </div>
+      <% end %>
+      <%= link_to 'Book', new_user_meeting_path(@user, date: date), class: 'text-green-500 text-sm' %>
     </div>
   <% end %>
 <% end %>
