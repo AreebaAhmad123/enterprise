@@ -15,23 +15,21 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  username: areeba
+  password: 1234
+  host: localhost
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  
 
 
 
 development:
-  adapter: postgresql
-  encoding: unicode
-  database: areeba
-  username: areeba
-  password: 1234
-  host: 127.0.0.1
-  port: 5433
 
-  # <<: *default
-  # database: myapp_development
+
+  <<: *default
+  database: myapp_development
 
   # # The specified database role being used to connect to PostgreSQL.
   # # To create additional roles in PostgreSQL see `$ createuser --help`.

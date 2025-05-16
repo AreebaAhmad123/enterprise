@@ -55,3 +55,10 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "devise", "~> 4.9"
+gem 'simple_calendar'
+gem 'stripe'
+gem 'sidekiq'
+gem "tailwindcss-rails"
+

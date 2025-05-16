@@ -1,0 +1,20 @@
+<h1 class="text-2xl font-bold mb-4">Meeting Details</h1>
+<p><strong>Time:</strong> <%= @meeting.start_time %></p>
+<p><strong>Duration:</strong> <%= @meeting.duration %> minutes</p>
+<p><strong>Status:</strong> <%= @meeting.status %></p>
+
+<h2 class="text-xl font-bold mt-4">Comments</h2>
+<div id="comments">
+  <% @meeting.comments.each do |comment| %>
+    <div class="border p-2 mb-2">
+      <p><%= comment.content.html_safe %></p>
+      <p class="text-sm text-gray-500">By <%= comment.user.email %> at <%= comment.created_at %></p>
+    </div>
+  <% end %>
+</div>
+
+<%= form_with model: Comment.new, url: user_meeting_comments_path(@user, @meeting), local: false do |f| %>
+  <%= f.hidden_field :meeting_id, value: @meeting.id %>
+  <%= f.trix_editor :content, class: 'trix-content' %>
+  <%= f.submit 'Add Comment', class: 'bg-blue-500 text-white px-4 py-2 rounded mt-2' %>
+<% end %>
