@@ -135,4 +135,4 @@ A full-featured **Ruby on Rails** web application that allows consultants and cl
 * Create a profile page showing session and payment history
 * Add animations and polish styling with Tailwind CSS
 
--
+
