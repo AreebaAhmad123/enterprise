@@ -62,3 +62,4 @@ gem 'stripe'
 gem 'sidekiq'
 gem "tailwindcss-rails"
 
+gem 'pundit'

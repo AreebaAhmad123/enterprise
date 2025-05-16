@@ -4,6 +4,8 @@ class Meeting < ApplicationRecord
   has_one :payment, dependent: :destroy
   validates :start_time, :duration, :status, presence: true
   validates :status, inclusion: { in: %w[scheduled canceled completed] }
+  validates :duration, numericality: { greater_than: 0, less_than_or_equal_to: 120 }
+  validates :start_time, uniqueness: { scope: :user_id, message: 'Slot already booked' }
 
   def self.available_slots(date)
     slots = []
