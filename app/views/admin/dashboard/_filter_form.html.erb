@@ -1,0 +1,9 @@
+<%= form_with url: admin_meetings_path, method: :get, local: true, class: 'mb-4' do |f| %>
+  <%= f.label :status, 'Status' %>
+  <%= f.select :status, options_for_select([['All', ''], ['Scheduled', 'scheduled'], ['Canceled', 'canceled'], ['Completed', 'completed']], params[:status]), {}, class: 'border p-2' %>
+  <%= f.label :user_id, 'User' %>
+  <%= f.select :user_id, options_for_select(User.all.map { |u| [u.email, u.id] }, params[:user_id]), { include_blank: 'All' }, class: 'border p-2' %>
+  <%= f.label :start_date, 'Start Date' %>
+  <%= f.date_field :start_date, value: params[:start_date], class: 'border p-2' %>
+  <%= f.submit 'Filter', class: 'bg-blue-500 text-white px-4 py-2 rounded' %>
+<% end %>
