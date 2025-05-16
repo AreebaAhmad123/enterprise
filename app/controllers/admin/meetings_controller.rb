@@ -1,11 +1,15 @@
-class Admin::DashboardController < ApplicationController
+class Admin::MeetingsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin
 
   def index
-    @users = User.all
     @meetings = Meeting.all.order(start_time: :desc)
-    @payments = Payment.all
+  end
+
+  def destroy
+    @meeting = Meeting.find(params[:id])
+    @meeting.update(status: 'canceled')
+    redirect_to admin_dashboard_path, notice: 'Meeting canceled.'
   end
 
   private
