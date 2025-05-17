@@ -1,5 +1,6 @@
 source "https://rubygems.org"
-
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+ruby '~> 3.2.3'
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.2.1"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
@@ -54,14 +55,32 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+
+  # ENV variables management https://github.com/bkeepers/dotenv
+  # gem 'dotenv-rails'
+  gem 'dotenv-rails', groups: [:development, :test]
+
+  gem 'pry'
 end
 
-gem "devise", "~> 4.9"
+# gem "devise", "~> 4.9"
 gem 'simple_calendar'
 gem 'stripe'
 gem 'sidekiq'
 gem "tailwindcss-rails"
 
 gem 'pundit'
+gem 'auth0', '~> 3.0'
 
 gem "cssbundling-rails", "~> 1.4"
+# An OmniAuth strategy to log in with Auth0. 
+gem 'omniauth-auth0', '~> 3.0'
+
+# Prevents forged authentication requests
+gem 'omniauth-rails_csrf_protection', '~> 1.0' 
+# Gem Repost implements Redirect using POST method. https://vergilet.github.io/repost/ 
+gem 'repost'
+
+# A ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard. https://github.com/jwt/ruby-jwt
+gem 'jwt'
+

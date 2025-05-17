@@ -16,24 +16,25 @@
 
   <body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col">
     <!-- Navbar -->
-    <nav class="bg-blue-700 shadow-md">
-      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-        <%= link_to '📅 Consulting Scheduler', root_path, class: 'text-white font-semibold text-xl' %>
+   <nav class="bg-black shadow-md">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <%= link_to '📅 Consulting Scheduler', root_path, class: 'text-white font-semibold text-xl' %>
 
-        <div class="space-x-4">
-          <% if user_signed_in? %>
-            <%= link_to 'Profile', user_meetings_path(current_user), class: 'text-white hover:text-gray-200 transition' %>
-            <% if current_user.role == 'admin' %>
-              <%= link_to 'Admin Dashboard', admin_dashboard_path, class: 'text-white hover:text-gray-200 transition' %>
-            <% end %>
-            <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'text-white hover:text-red-200 transition' %>
-          <% else %>
-            <%= link_to 'Login', new_user_session_path, class: 'text-white hover:text-gray-200 transition' %>
-            <%= link_to 'Sign Up', new_user_registration_path, class: 'bg-white text-blue-700 font-medium px-3 py-1 rounded hover:bg-blue-100 transition' %>
-          <% end %>
-        </div>
-      </div>
-    </nav>
+    <div class="space-x-4">
+      <% if current_user %>
+        <%= link_to 'Profile', profile_path, class: 'text-white hover:text-gray-200 transition' %>
+        <% if current_user.role == 'admin' %>
+          <%= link_to 'Admin Dashboard', admin_dashboard_path, class: 'text-white hover:text-gray-200 transition' %>
+        <% end %>
+          <%= link_to 'Logout', auth0_logout_path, class: 'text-white hover:text-red-200 transition' %>
+        <% else %>
+          <%= button_to 'Login', auth0_login_path, method: :post, class: 'text-white hover:text-gray-200 transition bg-transparent border-none cursor-pointer' %>
+          <%= button_to 'Sign Up', auth0_login_path(screen_hint: 'signup'), method: :post, class: 'bg-white text-black font-medium px-3 py-1 rounded hover:bg-blue-100 transition' %>
+        <% end %>
+
+    </div>
+  </div>
+</nav>
 
     <!-- Main Content -->
     <main class="flex-grow container mx-auto px-4 py-6">
@@ -41,7 +42,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t text-center text-sm text-gray-500 py-4">
+    <footer class="bg-black border-t text-center text-sm text-white py-4">
       &copy; <%= Time.now.year %> Consulting Scheduler. All rights reserved.
     </footer>
   </body>
