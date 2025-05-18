@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-  before_action :require_login
+  before_action :authenticate_user!, only: [:profile]
 
   def profile
-    @user = current_user || User.new # Fallback for demo purposes
+    @user = current_user
   end
 end

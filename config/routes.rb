@@ -1,17 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :users, controllers: { registrations: "registrations" }  
   root 'home#index'
-
- scope :auth do
-    get 'failure' => 'auth0#failure'
-    
-    # Handle both GET and POST for auth0 login
-    match 'auth0', to: 'auth0#login', via: [:get, :post], as: :auth0_login
-    
-    scope :auth0 do
-      get 'callback' => 'auth0#callback'
-      get 'logout' => 'auth0#logout'
-    end
-  end
 
   get 'protected', to: 'messages#protected'
   get 'public', to: 'messages#public'

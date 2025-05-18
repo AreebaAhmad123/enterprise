@@ -34,6 +34,7 @@ gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
+gem "devise"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -63,23 +64,22 @@ group :test do
   gem 'pry'
 end
 
-# gem "devise", "~> 4.9"
 gem 'simple_calendar'
 gem 'stripe'
 gem 'sidekiq'
 gem "tailwindcss-rails"
 
 gem 'pundit'
-gem 'auth0', '~> 3.0'
+# gem 'auth0', '~> 3.0'
 
 gem "cssbundling-rails", "~> 1.4"
 # An OmniAuth strategy to log in with Auth0. 
-gem 'omniauth-auth0', '~> 3.0'
+# gem 'omniauth-auth0', '~> 3.0'
 
-# Prevents forged authentication requests
-gem 'omniauth-rails_csrf_protection', '~> 1.0' 
+# # Prevents forged authentication requests
+# gem 'omniauth-rails_csrf_protection', '~> 1.0' 
 # Gem Repost implements Redirect using POST method. https://vergilet.github.io/repost/ 
-gem 'repost'
+# gem 'repost'
 
 # A ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard. https://github.com/jwt/ruby-jwt
 gem 'jwt'

@@ -1,27 +1,17 @@
 class User < ApplicationRecord
-  has_many :sessions, foreign_key: 'user_id'
-  has_many :consulting_sessions, class_name: 'Session', foreign_key: 'consultant_id'
-  has_many :comments
-  has_many :payments
-
-  validates :name, presence: true
-  validates :email, presence: true, uniqueness: true
-  validates :auth0_id, uniqueness: true, allow_nil: true
-  validates :role, presence: true, inclusion: { in: %w[client consultant admin] }
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
+  validates :role, inclusion: { in: %w[client admin], message: "must be client or admin" }
 
   def client?
-    role == 'client'
-  end
-
-  def consultant?
-    role == 'consultant'
+    role == "client"
   end
 
   def admin?
-    role == 'admin'
-  end
-
-  def self.consultants
-    where(role: 'consultant')
+    role == "admin"
   end
 end

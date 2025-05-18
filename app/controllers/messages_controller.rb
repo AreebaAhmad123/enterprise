@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class MessagesController < ApplicationController
-  before_action :require_login, except: [:public]
-
+before_action :authenticate_user!, only: [:protected, :admin]
   def public
     @message = MessagesService.call(Message::PUBLIC)
   end
