@@ -1,23 +1,33 @@
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
 
+  <!-- Stats Overview -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <div class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-2">Total Sessions</h2>
-      <p class="text-3xl font-bold text-blue-600"><%= @total_sessions %></p>
+      <h2 class="text-lg font-semibold text-gray-900 mb-2">Total Users</h2>
+      <p class="text-3xl font-bold text-blue-600"><%= @total_users %></p>
     </div>
-
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-2">Total Sessions</h2>
+      <p class="text-3xl font-bold text-indigo-600"><%= @total_sessions %></p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-2">Pending Sessions</h2>
+      <p class="text-3xl font-bold text-yellow-500"><%= @pending_sessions %></p>
+    </div>
     <div class="bg-white rounded-lg shadow p-6">
       <h2 class="text-lg font-semibold text-gray-900 mb-2">Total Revenue</h2>
       <p class="text-3xl font-bold text-green-600"><%= number_to_currency(@total_revenue) %></p>
     </div>
   </div>
 
+  <!-- Recent Sections -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Upcoming Sessions -->
     <div class="bg-white rounded-lg shadow p-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold text-gray-900">Upcoming Sessions</h2>
-        <%= link_to 'View All', admin_sessions_path, class: 'text-blue-500 hover:text-blue-700' %>
+        <%= link_to 'View All', admin_meetings_path, class: 'text-blue-500 hover:text-blue-700' %>
       </div>
 
       <div class="space-y-4">
@@ -39,6 +49,7 @@
       </div>
     </div>
 
+    <!-- Recent Payments -->
     <div class="bg-white rounded-lg shadow p-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold text-gray-900">Recent Payments</h2>
@@ -70,5 +81,11 @@
         <% end %>
       </div>
     </div>
+  </div>
+
+  <!-- Manage Links -->
+  <div class="mt-10 space-x-4">
+    <%= link_to 'Manage Meetings', admin_meetings_path, class: 'bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded' %>
+    <%= link_to 'Manage Users', admin_users_path, class: 'bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded' %>
   </div>
 </div>

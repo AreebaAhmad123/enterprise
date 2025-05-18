@@ -1,0 +1,9 @@
+<h1><%= @meeting.title %></h1>
+<p><strong>Description:</strong> <%= @meeting.description %></p>
+<p><strong>Client:</strong> <%= @meeting.client.email %></p>
+<p><strong>Consultant:</strong> <%= @meeting.consultant.email %></p>
+<p><strong>Start Time:</strong> <%= @meeting.start_time.strftime('%B %d, %Y at %I:%M %p') %></p>
+<p><strong>End Time:</strong> <%= @meeting.end_time.strftime('%B %d, %Y at %I:%M %p') %></p>
+<p><strong>Status:</strong> <%= @meeting.status.capitalize %></p>
+<%= link_to 'Cancel Meeting', admin_meeting_path(@meeting), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'text-red-500' %>
+<%= link_to 'Back', admin_meetings_path, class: 'mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded' %>

@@ -1,0 +1,35 @@
+<h1>Pay for Session: <%= @meeting.title %></h1>
+<%= form_with url: process_payment_meeting_path(@meeting), local: true, data: { turbo: false } do |form| %>
+  <div id="card-element" class="border p-2 rounded"></div>
+  <div id="card-errors" role="alert" class="text-red-700"></div>
+  <%= form.submit 'Pay $50', class: 'mt-4 bg-green-500 text-white px-4 py-2 rounded', id: 'submit' %>
+<% end %>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  const stripe = Stripe('<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>');
+  const elements = stripe.elements();
+  const card = elements.create('card');
+  card.mount('#card-element');
+
+  card.addEventListener('change', ({error}) => {
+    const displayError = document.getElementById('card-errors');
+    displayError.textContent = error ? error.message : '';
+  });
+
+  const form = document.querySelector('form');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const { token, error } = await stripe.createToken(card);
+    if (error) {
+      document.getElementById('card-errors').textContent = error.message;
+    } else {
+      const hiddenInput = document.createElement('input');
+      hiddenInput.setAttribute('type', 'hidden');
+      hiddenInput.setAttribute('name', 'stripe_token');
+      hiddenInput.setAttribute('value', token.id);
+      form.appendChild(hiddenInput);
+      form.submit();
+    }
+  });
+</script>

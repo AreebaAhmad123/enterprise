@@ -1,10 +1,13 @@
 class Admin::UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin
-  before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
     @users = User.all
+  end
+
+  def show
   end
 
   def edit
@@ -34,6 +37,6 @@ class Admin::UsersController < ApplicationController
   end
 
   def ensure_admin
-    redirect_to root_path, alert: 'Access denied.' unless current_user.role == 'admin'
+    redirect_to root_path, alert: 'Only admins can access this page.' unless current_user.admin?
   end
 end

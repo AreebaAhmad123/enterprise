@@ -1,0 +1,4 @@
+<h1>Payment Confirmation</h1>
+<p>Dear <%= @user.email %>,</p>
+<p>Your payment for the session "<%= @meeting.title %>" scheduled on <%= @meeting.start_time.strftime('%B %d, %Y at %I:%M %p') %> has been successfully processed.</p>
+<p>Thank you for your booking!</p>

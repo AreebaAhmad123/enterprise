@@ -1,0 +1,4 @@
+<h1>Cancel Session: <%= @meeting.title %></h1>
+<p>Are you sure you want to cancel this session?</p>
+<%= link_to 'Confirm Cancel', cancel_meeting_path(@meeting), class: 'bg-red-500 text-white px-4 py-2 rounded', data: { turbo_method: :get } %>
+<%= link_to 'Back', @meeting, class: 'bg-gray-500 text-white px-4 py-2 rounded' %>

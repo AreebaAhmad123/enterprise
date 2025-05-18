@@ -1,8 +1,30 @@
-<h1 class="text-2xl font-bold mb-4">New Meeting</h1>
+<h1 class="text-2xl font-bold mb-4">Book a Session</h1>
+
 <%= form_with model: [@user, @meeting], local: true do |f| %>
-  <%= f.label :start_time, 'Select Time Slot' %>
-  <%= f.select :start_time, options_for_select(@available_slots.map { |slot| [slot.strftime('%H:%M'), slot] }) %>
-  <%= f.label :duration, 'Duration (minutes)' %>
-  <%= f.number_field :duration, min: 30, max: 120, step: 30, value: 60 %>
-  <%= f.submit 'Book Meeting', class: 'bg-blue-500 text-white px-4 py-2 rounded mt-2' %>
+  <div class="mb-4">
+    <%= f.label :title, class: "block text-sm font-medium text-gray-700" %>
+    <%= f.text_field :title, class: "mt-1 block w-full border p-2 rounded" %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :description, class: "block text-sm font-medium text-gray-700" %>
+    <%= f.text_area :description, rows: 3, class: "mt-1 block w-full border p-2 rounded" %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :start_time, "Select Time Slot", class: "block text-sm font-medium text-gray-700" %>
+    <%= f.select :start_time, options_for_select(@available_slots.map { |slot| [slot.strftime('%H:%M'), slot] }), {}, class: "mt-1 block w-full border p-2 rounded" %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :duration, 'Duration (minutes)', class: "block text-sm font-medium text-gray-700" %>
+    <%= f.number_field :duration, min: 30, max: 120, step: 30, value: 60, class: "mt-1 block w-full border p-2 rounded" %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :consultant_id, "Consultant", class: "block text-sm font-medium text-gray-700" %>
+    <%= f.collection_select :consultant_id, @consultants, :id, :email, {}, class: "mt-1 block w-full border p-2 rounded" %>
+  </div>
+
+  <%= f.submit "Book Session", class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded" %>
 <% end %>

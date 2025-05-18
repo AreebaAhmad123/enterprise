@@ -1,20 +1,71 @@
-<h1 class="text-2xl font-bold mb-4">Meeting Details</h1>
-<p><strong>Time:</strong> <%= @meeting.start_time %></p>
-<p><strong>Duration:</strong> <%= @meeting.duration %> minutes</p>
-<p><strong>Status:</strong> <%= @meeting.status %></p>
+<h1 class="text-2xl font-bold mb-4"><%= @meeting.title %></h1>
 
-<h2 class="text-xl font-bold mt-4">Comments</h2>
-<div id="comments">
+<p><strong>Description:</strong> <%= @meeting.description %></p>
+<p><strong>Start Time:</strong> <%= @meeting.start_time.strftime('%B %d, %Y at %I:%M %p') %></p>
+<p><strong>End Time:</strong> <%= @meeting.end_time.strftime('%B %d, %Y at %I:%M %p') %></p>
+<p><strong>Duration:</strong> <%= @meeting.duration %> minutes</p>
+<p><strong>Status:</strong> <%= @meeting.status.capitalize %></p>
+
+<% if @meeting.status == 'scheduled' && current_user.client? %>
+  <div class="flex gap-4 mt-4">
+    <%= link_to 'Pay for Session', pay_meeting_path(@meeting), class: 'bg-green-500 text-white px-4 py-2 rounded' %>
+    <%= link_to 'Cancel Session', cancel_meeting_path(@meeting), class: 'bg-red-500 text-white px-4 py-2 rounded' %>
+  </div>
+<% end %>
+
+<% if @meeting.status == 'pending' && @meeting.client == current_user %>
+  <h2 class="text-xl font-semibold mt-6">Complete Payment</h2>
+  <%= form_with url: meeting_payments_path(@meeting), local: true, id: "payment-form", class: "mt-4" do |f| %>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <div id="card-element" class="border p-2 rounded"></div>
+    <div id="card-errors" class="text-red-600 mt-2"></div>
+
+    <%= hidden_field_tag :stripeToken %>
+    <button id="submit" class="bg-green-600 text-white px-4 py-2 rounded mt-4">Pay Now</button>
+  <% end %>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const stripe = Stripe('<%= ENV["STRIPE_PUBLISHABLE_KEY"] %>');
+      const elements = stripe.elements();
+      const card = elements.create('card');
+      card.mount('#card-element');
+
+      card.on('change', function(event) {
+        const displayError = document.getElementById('card-errors');
+        displayError.textContent = event.error ? event.error.message : '';
+      });
+
+      const form = document.getElementById('payment-form');
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        stripe.createToken(card).then(function(result) {
+          if (result.error) {
+            document.getElementById('card-errors').textContent = result.error.message;
+          } else {
+            document.querySelector('input[name="stripeToken"]').value = result.token.id;
+            form.submit();
+          }
+        });
+      });
+    });
+  </script>
+<% end %>
+
+<h2 class="text-xl font-bold mt-6">Comments</h2>
+<div id="comments" class="mt-2">
   <% @meeting.comments.each do |comment| %>
-    <div class="border p-2 mb-2">
+    <div class="border p-2 mb-2 rounded">
       <p><%= comment.content.html_safe %></p>
-      <p class="text-sm text-gray-500">By <%= comment.user.email %> at <%= comment.created_at %></p>
+      <p class="text-sm text-gray-500">By <%= comment.user.email %> at <%= comment.created_at.strftime("%b %d, %Y %I:%M %p") %></p>
     </div>
   <% end %>
 </div>
 
-<%= form_with model: Comment.new, url: user_meeting_comments_path(@user, @meeting), local: false do |f| %>
-  <%= f.hidden_field :meeting_id, value: @meeting.id %>
-  <%= f.trix_editor :content, class: 'trix-content' %>
-  <%= f.submit 'Add Comment', class: 'bg-blue-500 text-white px-4 py-2 rounded mt-2' %>
+<%= form_with(model: [@meeting, Comment.new], local: false, html: { id: 'comment-form' }) do |form| %>
+  <%= form.trix_editor :content, class: 'trix-content' %>
+  <%= form.submit 'Add Comment', class: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded' %>
 <% end %>
+
+<%= link_to 'Back to Meetings', meetings_path, class: 'mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded' %>

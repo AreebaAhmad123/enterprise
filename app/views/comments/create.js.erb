@@ -1,2 +1,3 @@
-document.getElementById('comments').insertAdjacentHTML('beforeend', '<%= j render partial: "comment", locals: { comment: @comment } %>');
-document.querySelector('trix-editor').value = '';
+
+document.getElementById('comments').insertAdjacentHTML('beforeend', '<%= j render @comment %>');
+document.querySelector('#comment-form').reset();

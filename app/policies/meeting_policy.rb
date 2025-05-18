@@ -18,4 +18,14 @@ class MeetingPolicy < ApplicationPolicy
   def new?
     create?
   end
+  def update?
+  record.user == user || user.admin?
+  def update?
+    record.user == user || user.admin?
+  end
+
+  def edit?
+    update?
+  end
+
 end

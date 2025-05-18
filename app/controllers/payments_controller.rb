@@ -1,54 +1,73 @@
 class PaymentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_session
-  before_action :set_payment, only: [:show, :process_payment, :refund]
+  before_action :set_meeting
+  before_action :set_payment, only: [:show, :refund]
 
   def new
-    @payment = @session.build_payment(
+    @payment = @meeting.build_payment(
       user: current_user,
-      amount: @session.consultant.hourly_rate,
-      currency: 'usd'
+      amount: @meeting.consultant.hourly_rate, # assuming consultant has hourly_rate
+      currency: 'usd',
+      status: 'pending'
     )
   end
 
   def create
-    @payment = @session.build_payment(payment_params)
-    @payment.user = current_user
+    @payment = @meeting.build_payment(
+      user: current_user,
+      amount: @meeting.consultant.hourly_rate,
+      currency: 'usd',
+      status: 'pending'
+    )
 
     if @payment.save
-      redirect_to new_session_payment_process_path(@session, @payment)
+      session = Stripe::Checkout::Session.create(
+        payment_method_types: ['card'],
+        line_items: [{
+          price_data: {
+            currency: @payment.currency,
+            product_data: { name: "Consulting Session: #{@meeting.title}" },
+            unit_amount: (@payment.amount * 100).to_i
+          },
+          quantity: 1
+        }],
+        mode: 'payment',
+        success_url: meeting_payment_success_url(@meeting, @payment),
+        cancel_url: meeting_payment_cancel_url(@meeting, @payment)
+      )
+
+      @payment.update(stripe_session_id: session.id)
+      redirect_to session.url, allow_other_host: true
     else
+      flash.now[:alert] = 'Failed to create payment.'
       render :new, status: :unprocessable_entity
     end
   end
 
-  def process_payment
-    if @payment.process_payment(params[:payment_method_id])
-      redirect_to session_path(@session), notice: 'Payment was successful!'
-    else
-      redirect_to new_session_payment_process_path(@session, @payment), alert: 'Payment failed. Please try again.'
-    end
+  # You can implement webhook or a success action after payment confirmation from Stripe
+  def success
+    # Find payment by stripe_session_id or params, mark as succeeded, etc.
+  end
+
+  def cancel
+    # Handle cancellation logic if needed
   end
 
   def refund
     if @payment.refund
-      redirect_to session_path(@session), notice: 'Payment was successfully refunded.'
+      redirect_to meeting_path(@meeting), notice: 'Payment was successfully refunded.'
     else
-      redirect_to session_path(@session), alert: 'Refund failed. Please try again.'
+      redirect_to meeting_path(@meeting), alert: 'Refund failed. Please try again.'
     end
   end
 
   private
 
-  def set_session
-    @session = Session.find(params[:session_id])
+  def set_meeting
+    @meeting = Meeting.find(params[:meeting_id])
   end
 
   def set_payment
-    @payment = @session.payment
+    @payment = @meeting.payment
   end
-
-  def payment_params
-    params.require(:payment).permit(:amount, :currency)
-  end
-end 
+end
