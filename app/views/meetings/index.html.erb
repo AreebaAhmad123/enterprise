@@ -1,40 +1,103 @@
 <h1 class="text-2xl font-bold mb-4">Your Meetings</h1>
 
-<%= link_to 'Book a New Session', new_user_meeting_path(@user), class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4 inline-block' %>
+<!-- Book New Session Button -->
+<%= link_to 'Book a New Session', new_user_meeting_path(@user), class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4 inline-block float-right' %>
 
+<!-- Admin Filters -->
+<% if current_user.admin? %>
+  <div class="mb-6 bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-2">Filter Meetings</h2>
+    <%= form_with url: user_meetings_path(@user), method: :get, class: 'space-y-4' do |form| %>
+      <div class="flex flex-wrap gap-4">
+        <div>
+          <%= form.label :filter_user_id, 'User', class: 'block text-sm font-medium' %>
+          <%= form.collection_select :filter_user_id, User.all, :id, :email, { include_blank: 'All Users' }, class: 'mt-1 block w-full border rounded p-2' %>
+        </div>
+        <div>
+          <%= form.label :start_date, 'Start Date', class: 'block text-sm font-medium' %>
+          <%= form.date_field :start_date, value: params[:start_date], class: 'mt-1 block w-full border rounded p-2' %>
+        </div>
+        <div>
+          <%= form.label :end_date, 'End Date', class: 'block text-sm font-medium' %>
+          <%= form.date_field :end_date, value: params[:end_date], class: 'mt-1 block w-full border rounded p-2' %>
+        </div>
+        <div class="flex items-end gap-2">
+          <%= form.submit 'Apply Filters', class: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600' %>
+          <%= link_to 'Export CSV', export_csv_meetings_path(format: :csv), class: 'bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<!-- Calendar View Toggle -->
 <div class="mb-6">
-  <%= link_to 'Monthly View', user_meetings_path(@user, view: 'month'), class: 'text-blue-500 hover:underline mr-4' %>
-  <%= link_to 'Weekly View', user_meetings_path(@user, view: 'week'), class: 'text-blue-500 hover:underline' %>
+  <%= link_to 'Monthly View', user_meetings_path(@user, view: 'month'), class: "text-blue-500 hover:underline mr-4 #{params[:view] != 'week' ? 'font-bold' : ''}" %>
+  <%= link_to 'Weekly View', user_meetings_path(@user, view: 'week'), class: "text-blue-500 hover:underline #{params[:view] == 'week' ? 'font-bold' : ''}" %>
 </div>
 
-<% if @meetings.any? %>
-  <% if params[:view] == 'week' %>
-    <%= week_calendar(events: @meetings, attribute: :start_time) do |date, meetings| %>
-      <div class="border p-2">
-        <strong><%= date.strftime('%a, %b %d') %></strong>
-        <% meetings.each do |meeting| %>
-          <div class="text-sm text-blue-600">
-            <%= meeting.start_time.strftime('%H:%M') %> (<%= meeting.status %>)
-            - <%= link_to 'Cancel', cancel_meeting_path(meeting), data: { turbo_method: :get, turbo_confirm: "Are you sure?" }, class: "text-red-500 hover:underline ml-2" %>
-          </div>
-        <% end %>
-        <%= link_to 'Book', new_user_meeting_path(@user, date: date), class: 'text-green-600 text-sm hover:underline' %>
+<!-- Calendar Display -->
+<div class="mb-6">
+  <% if @meetings.any? %>
+    <% if params[:view] == 'week' %>
+      <%= week_calendar(events: @meetings, attribute: :start_time) do |date, meetings| %>
+        <div class="border p-2 bg-white rounded shadow hover:bg-gray-100 transition <%= date.today? ? 'bg-blue-50' : '' %>">
+          <strong class="text-sm"><%= date.strftime('%a, %b %d') %></strong>
+          <% meetings.each do |meeting| %>
+            <div class="text-sm text-blue-600 mt-1">
+              <%= meeting.start_time.strftime('%H:%M') %> - <%= meeting.title %> (<%= meeting.status %>)
+              <% if current_user == meeting.client || current_user.admin? %>
+                - <%= link_to 'Cancel', cancel_meeting_path(meeting), data: { turbo_method: :get, turbo_confirm: 'Are you sure?' }, class: 'text-red-500 hover:underline' %>
+              <% end %>
+              - <%= link_to 'Comment', meeting_path(meeting), class: 'text-blue-600 hover:underline' %>
+            </div>
+          <% end %>
+          <%= link_to 'Book', new_user_meeting_path(@user, date: date), class: 'text-green-600 text-sm hover:underline mt-1' %>
+        </div>
+      <% end %>
+    <% else %>
+      <%= month_calendar(events: @meetings, attribute: :start_time) do |date, meetings| %>
+        <div class="border p-2 bg-white rounded shadow hover:bg-gray-100 transition <%= date.today? ? 'bg-blue-50' : '' %>">
+          <strong class="text-sm"><%= date.strftime('%b %d') %></strong>
+          <% meetings.each do |meeting| %>
+            <div class="text-sm text-blue-600 mt-1">
+              <%= meeting.start_time.strftime('%H:%M') %> - <%= meeting.title %> (<%= meeting.status %>)
+              <% if meeting.client && (current_user == meeting.client || current_user.admin?) %>
+                - <%= link_to 'Cancel', cancel_meeting_path(meeting), data: { turbo_method: :get, turbo_confirm: 'Are you sure?' }, class: 'text-red-500 hover:underline' %>
+              <% end %>
+              - <%= link_to 'Comment', meeting_path(meeting), class: 'text-blue-600 hover:underline' %>
+            </div>
+          <% end %>
+          <%= link_to 'Book', new_user_meeting_path(@user, date: date), class: 'text-green-600 text-sm hover:underline mt-1' %>
+        </div>
+      <% end %>
+    <% end %>
+  <% else %>
+    <p class="text-gray-600">No upcoming sessions.</p>
+  <% end %>
+</div>
+
+<!-- Upcoming Meeting List -->
+<div class="mt-6">
+  <h2 class="text-xl font-semibold mb-4">Upcoming Meetings</h2>
+  <% if @meetings.any? %>
+    <% @meetings.order(:start_time).each do |meeting| %>
+      <div class="bg-white shadow p-4 rounded mb-2 flex justify-between items-center">
+        <div>
+          <h4 class="text-lg font-semibold"><%= meeting.title %></h4>
+          <p class="text-sm text-gray-600"><%= meeting.start_time.strftime('%A, %d %b %Y %I:%M %p') %> (<%= meeting.duration %> minutes)</p>
+          <p class="text-sm text-gray-600">Status: <%= meeting.status.capitalize %></p>
+          <p class="text-sm text-gray-600">Consultant: <%= meeting.consultant&.email || 'Not assigned' %></p>
+        </div>
+        <div class="flex space-x-2">
+          <%= link_to 'Comment', meeting_path(meeting), class: 'text-blue-600 underline text-sm hover:text-blue-800' %>
+          <% if meeting.client && (current_user == meeting.client || current_user.admin?) %>
+            <%= link_to 'Cancel', cancel_meeting_path(meeting), data: { turbo_method: :get, turbo_confirm: 'Are you sure?' }, class: 'text-red-600 text-sm hover:text-red-800' %>
+          <% end %>
+        </div>
       </div>
     <% end %>
   <% else %>
-    <%= month_calendar(events: @meetings, attribute: :start_time) do |date, meetings| %>
-      <div class="border p-2">
-        <strong><%= date.strftime('%b %d') %></strong>
-        <% meetings.each do |meeting| %>
-          <div class="text-sm text-blue-600">
-            <%= meeting.start_time.strftime('%H:%M') %> (<%= meeting.status %>)
-            - <%= link_to 'Cancel', cancel_meeting_path(meeting), data: { turbo_method: :get, turbo_confirm: "Are you sure?" }, class: "text-red-500 hover:underline ml-2" %>
-          </div>
-        <% end %>
-        <%= link_to 'Book', new_user_meeting_path(@user, date: date), class: 'text-green-600 text-sm hover:underline' %>
-      </div>
-    <% end %>
+    <p class="text-gray-600">No upcoming meetings.</p>
   <% end %>
-<% else %>
-  <p class="text-gray-600">No upcoming sessions.</p>
-<% end %>
+</div>

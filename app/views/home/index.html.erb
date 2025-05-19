@@ -48,22 +48,42 @@
       <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in">
         <div class="text-3xl mb-4">📅</div>
         <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Responsive Scheduling</h3>
-        <p class="text-sm md:text-base text-gray-600">Interactive monthly and weekly calendars with simple_calendar.</p>
+        <p class="text-sm md:text-base text-gray-600 mb-4">Interactive monthly and weekly calendars with simple_calendar.</p>
+        <% if user_signed_in? %>
+          <a href="/meetings" class="text-blue-600 hover:underline text-sm md:text-base">View Calendar</a>
+        <% else %>
+          <a href="/users/sign_in" class="text-blue-600 hover:underline text-sm md:text-base">Sign in to Schedule</a>
+        <% end %>
       </div>
       <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in" style="animation-delay: 0.1s;">
         <div class="text-3xl mb-4">💬</div>
         <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Real-Time Comments</h3>
-        <p class="text-sm md:text-base text-gray-600">Engage with rich text and live updates via Trix.</p>
+        <p class="text-sm md:text-base text-gray-600 mb-4">Engage with rich text and live updates via Trix.</p>
+        <% if user_signed_in? %>
+          <a href="/meetings" class="text-blue-600 hover:underline text-sm md:text-base">View Meetings</a>
+        <% else %>
+          <a href="/users/sign_in" class="text-blue-600 hover:underline text-sm md:text-base">Sign in to Comment</a>
+        <% end %>
       </div>
       <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in" style="animation-delay: 0.2s;">
         <div class="text-3xl mb-4">💳</div>
         <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Secure Payments</h3>
-        <p class="text-sm md:text-base text-gray-600">Fast and safe transactions with Stripe integration.</p>
+        <p class="text-sm md:text-base text-gray-600 mb-4">Fast and safe transactions with Stripe integration.</p>
+        <% if user_signed_in? %>
+          <a href="/meetings" class="text-blue-600 hover:underline text-sm md:text-base">Book & Pay</a>
+        <% else %>
+          <a href="/users/sign_in" class="text-blue-600 hover:underline text-sm md:text-base">Sign in to Pay</a>
+        <% end %>
       </div>
       <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in" style="animation-delay: 0.3s;">
         <div class="text-3xl mb-4">📊</div>
         <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Admin Dashboard</h3>
-        <p class="text-sm md:text-base text-gray-600">Monitor and manage sessions with insightful analytics.</p>
+        <p class="text-sm md:text-base text-gray-600 mb-4">Monitor and manage sessions with insightful analytics.</p>
+        <% if user_signed_in? && current_user.admin? %>
+          <a href="/admin/dashboard" class="text-blue-600 hover:underline text-sm md:text-base">Access Dashboard</a>
+        <% else %>
+          <a href="/users/sign_in" class="text-blue-600 hover:underline text-sm md:text-base">Sign in as Admin</a>
+        <% end %>
       </div>
     </section>
   </main>

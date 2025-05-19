@@ -18,8 +18,7 @@ class MeetingPolicy < ApplicationPolicy
   def new?
     create?
   end
-  def update?
-  record.user == user || user.admin?
+
   def update?
     record.user == user || user.admin?
   end
@@ -27,5 +26,4 @@ class MeetingPolicy < ApplicationPolicy
   def edit?
     update?
   end
-
 end

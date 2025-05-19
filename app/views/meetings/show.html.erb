@@ -1,10 +1,14 @@
 <h1 class="text-2xl font-bold mb-4"><%= @meeting.title %></h1>
 
-<p><strong>Description:</strong> <%= @meeting.description %></p>
-<p><strong>Start Time:</strong> <%= @meeting.start_time.strftime('%B %d, %Y at %I:%M %p') %></p>
-<p><strong>End Time:</strong> <%= @meeting.end_time.strftime('%B %d, %Y at %I:%M %p') %></p>
-<p><strong>Duration:</strong> <%= @meeting.duration %> minutes</p>
-<p><strong>Status:</strong> <%= @meeting.status.capitalize %></p>
+<div class="bg-white shadow p-4 rounded">
+  <p><strong>Description:</strong> <%= @meeting.description || 'No description provided' %></p>
+  <p><strong>Start Time:</strong> <%= @meeting.start_time.strftime('%B %d, %Y at %I:%M %p') %></p>
+  <p><strong>End Time:</strong> <%= @meeting.end_time&.strftime('%B %d, %Y at %I:%M %p') || 'Not available' %></p>
+  <p><strong>Duration:</strong> <%= @meeting.duration %> minutes</p>
+  <p><strong>Status:</strong> <%= @meeting.status.capitalize %></p>
+  <p><strong>Client:</strong> <%= @meeting.client&.email || 'Not assigned' %></p>
+  <p><strong>Consultant:</strong> <%= @meeting.consultant&.email || 'Not assigned' %></p>
+</div>
 
 <% if @meeting.status == 'scheduled' && current_user.client? %>
   <div class="flex gap-4 mt-4">
@@ -33,8 +37,7 @@
       card.mount('#card-element');
 
       card.on('change', function(event) {
-        const displayError = document.getElementById('card-errors');
-        displayError.textContent = event.error ? event.error.message : '';
+        document.getElementById('card-errors').textContent = event.error ? event.error.message : '';
       });
 
       const form = document.getElementById('payment-form');
@@ -57,15 +60,35 @@
 <div id="comments" class="mt-2">
   <% @meeting.comments.each do |comment| %>
     <div class="border p-2 mb-2 rounded">
-      <p><%= comment.content.html_safe %></p>
+      <p><%= comment.content %></p>
       <p class="text-sm text-gray-500">By <%= comment.user.email %> at <%= comment.created_at.strftime("%b %d, %Y %I:%M %p") %></p>
     </div>
   <% end %>
 </div>
 
-<%= form_with(model: [@meeting, Comment.new], local: false, html: { id: 'comment-form' }) do |form| %>
-  <%= form.trix_editor :content, class: 'trix-content' %>
+<%= form_with model: [@meeting, Comment.new], url: meeting_comments_path(@meeting), remote: true, html: { id: 'comment-form' } do |form| %>
+  <%= form.rich_text_area :content, class: 'trix-content' %>
   <%= form.submit 'Add Comment', class: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded' %>
 <% end %>
 
-<%= link_to 'Back to Meetings', meetings_path, class: 'mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded' %>
+<script>
+  document.addEventListener('ajax:success', function(event) {
+    const [data, _status, xhr] = event.detail;
+    const comment = data.comment;
+    const commentsDiv = document.getElementById('comments');
+    commentsDiv.insertAdjacentHTML('beforeend', `
+      <div class="border p-2 mb-2 rounded">
+        <p>${comment.content}</p>
+        <p class="text-sm text-gray-500">By ${comment.user} at ${comment.created_at}</p>
+      </div>
+    `);
+    document.querySelector('#comment-form').reset();
+  });
+
+  document.addEventListener('ajax:error', function(event) {
+    const [_data, _status, xhr] = event.detail;
+    alert('Failed to add comment: ' + xhr.responseText);
+  });
+</script>
+
+<%= link_to 'Back to Meetings', user_meetings_path(@meeting.client), class: 'mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded' %>

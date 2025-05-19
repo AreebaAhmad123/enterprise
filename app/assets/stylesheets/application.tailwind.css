@@ -2,3 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 @import "trix/dist/trix";
+.simple-calendar .calendar-heading {
+  @apply flex justify-between items-center mb-4;
+}
+.simple-calendar .calendar-title {
+  @apply text-xl font-semibold;
+}
+.simple-calendar .today {
+  @apply bg-blue-100;
+}
+.simple-calendar .day {
+  @apply border p-2 h-24 overflow-auto;
+}
+.simple-calendar .day:hover {
+  @apply bg-gray-50;
+}@import 'actiontext.css';
