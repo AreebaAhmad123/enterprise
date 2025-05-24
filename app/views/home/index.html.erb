@@ -5,87 +5,280 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Consulting Session Scheduler - Main</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
   <style>
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .animate-fade-in {
-      animation: fadeIn 0.5s ease-out forwards;
+      animation: fadeIn 0.6s ease-out forwards;
     }
     .hover-scale {
-      transition: transform 0.3s ease, background-color 0.3s ease;
+      transition: all 0.3s ease;
     }
     .hover-scale:hover {
-      transform: scale(1.03);
-      background-color: #f7f7f7;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #f6f8fd 0%, #f1f4f9 100%);
+    }
+    .hero-bg {
+      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
+      background-size: cover;
+      background-position: center;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+    }
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      margin: 0 auto 1.5rem;
+      font-size: 2rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    .full-width {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
   </style>
 </head>
-<body class="min-h-screen bg-gray-100 flex flex-col font-sans">
+<body class="min-h-screen gradient-bg flex flex-col font-sans">
   <!-- Main Content -->
-  <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+  <main class="flex-grow">
     <!-- Hero Section -->
-    <section class="text-center max-w-3xl mx-auto mb-16 md:mb-24 animate-fade-in">
-      <h2 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4 md:mb-6 leading-tight">
-        Schedule Your Sessions Seamlessly
-      </h2>
-      <p class="text-base md:text-lg text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto">
-        Effortlessly book, manage, and pay for consulting sessions in one intuitive platform.
-      </p>
-      <div class="flex justify-center space-x-4">
-        <a href="/users/sign_up" class="inline-block bg-black text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-gray-800 transition-colors shadow-md">
-          Get Started
-        </a>
-        <a href="#features" class="inline-block text-black px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-semibold hover:text-gray-700 transition-colors border border-black">
-          Learn More
-        </a>
+    <section class="hero-bg text-white py-32">
+      <div class="container mx-auto max-w-4xl text-center px-4">
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 md:mb-8 leading-tight animate-fade-in">
+          Schedule Your Sessions <span class="gradient-text">Seamlessly</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-100 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in" style="animation-delay: 0.2s;">
+          Effortlessly book, manage, and pay for consulting sessions in one intuitive platform. Join thousands of professionals who trust our scheduling system.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 animate-fade-in" style="animation-delay: 0.4s;">
+          <% if user_signed_in? %>
+            <%= link_to 'View Your Meetings', user_meetings_path(current_user), 
+                class: 'w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl glass-effect' %>
+          <% else %>
+            <%= link_to 'Get Started', new_user_registration_path, 
+                class: 'w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl glass-effect' %>
+            <%= link_to 'Sign In', new_user_session_path, 
+                class: 'w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg hover:shadow-xl glass-effect' %>
+          <% end %>
+        </div>
       </div>
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-5xl mx-auto">
-      <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in">
-        <div class="text-3xl mb-4">📅</div>
-        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Responsive Scheduling</h3>
-        <p class="text-sm md:text-base text-gray-600 mb-4">Interactive monthly and weekly calendars with simple_calendar.</p>
-        <% if user_signed_in? %>
-          <a href="/meetings" class="text-blue-600 hover:underline text-sm md:text-base">View Calendar</a>
-        <% else %>
-          <a href="/users/sign_in" class="text-blue-600 hover:underline text-sm md:text-base">Sign in to Schedule</a>
-        <% end %>
-      </div>
-      <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in" style="animation-delay: 0.1s;">
-        <div class="text-3xl mb-4">💬</div>
-        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Real-Time Comments</h3>
-        <p class="text-sm md:text-base text-gray-600 mb-4">Engage with rich text and live updates via Trix.</p>
-        <% if user_signed_in? %>
-          <a href="/meetings" class="text-blue-600 hover:underline text-sm md:text-base">View Meetings</a>
-        <% else %>
-          <a href="/users/sign_in" class="text-blue-600 hover:underline text-sm md:text-base">Sign in to Comment</a>
-        <% end %>
-      </div>
-      <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in" style="animation-delay: 0.2s;">
-        <div class="text-3xl mb-4">💳</div>
-        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Secure Payments</h3>
-        <p class="text-sm md:text-base text-gray-600 mb-4">Fast and safe transactions with Stripe integration.</p>
-        <% if user_signed_in? %>
-          <a href="/meetings" class="text-blue-600 hover:underline text-sm md:text-base">Book & Pay</a>
-        <% else %>
-          <a href="/users/sign_in" class="text-blue-600 hover:underline text-sm md:text-base">Sign in to Pay</a>
-        <% end %>
-      </div>
-      <div class="bg-white rounded-xl shadow-md p-6 text-center hover-scale animate-fade-in" style="animation-delay: 0.3s;">
-        <div class="text-3xl mb-4">📊</div>
-        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Admin Dashboard</h3>
-        <p class="text-sm md:text-base text-gray-600 mb-4">Monitor and manage sessions with insightful analytics.</p>
-        <% if user_signed_in? && current_user.admin? %>
-          <a href="/admin/dashboard" class="text-blue-600 hover:underline text-sm md:text-base">Access Dashboard</a>
-        <% else %>
-          <a href="/users/sign_in" class="text-blue-600 hover:underline text-sm md:text-base">Sign in as Admin</a>
-        <% end %>
+    <section id="features" class="py-20 px-4">
+      <div class="container mx-auto max-w-6xl">
+        <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-16">Why Choose Our Platform</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover-scale animate-fade-in">
+            <div class="feature-icon">
+              <i data-feather="calendar" class="w-8 h-8 text-blue-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Smart Scheduling</h3>
+            <p class="text-gray-600 mb-6">Interactive calendars with real-time availability and instant booking confirmation.</p>
+            <% if user_signed_in? %>
+              <%= link_to 'View Calendar', user_meetings_path(current_user), 
+                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+            <% else %>
+              <%= link_to 'Sign in to Schedule', new_user_session_path, 
+                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+            <% end %>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover-scale animate-fade-in" style="animation-delay: 0.1s;">
+            <div class="feature-icon">
+              <i data-feather="message-circle" class="w-8 h-8 text-blue-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Live Collaboration</h3>
+            <p class="text-gray-600 mb-6">Rich text comments and real-time updates for seamless communication.</p>
+            <% if user_signed_in? %>
+              <%= link_to 'Start Collaborating', user_meetings_path(current_user), 
+                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+            <% else %>
+              <%= link_to 'Sign in to Comment', new_user_session_path, 
+                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+            <% end %>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover-scale animate-fade-in" style="animation-delay: 0.2s;">
+            <div class="feature-icon">
+              <i data-feather="credit-card" class="w-8 h-8 text-blue-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Secure Payments</h3>
+            <p class="text-gray-600 mb-6">Fast and secure transactions powered by Stripe integration.</p>
+            <% if user_signed_in? %>
+              <%= link_to 'Book & Pay', user_meetings_path(current_user), 
+                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+            <% else %>
+              <%= link_to 'Sign in to Pay', new_user_session_path, 
+                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+            <% end %>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover-scale animate-fade-in" style="animation-delay: 0.3s;">
+            <div class="feature-icon">
+              <i data-feather="bar-chart-2" class="w-8 h-8 text-blue-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Admin Dashboard</h3>
+            <p class="text-gray-600 mb-6">Comprehensive analytics and management tools for administrators.</p>
+            <% if user_signed_in? && current_user.admin? %>
+              <%= link_to 'Access Dashboard', admin_dashboard_path, 
+                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+            <% else %>
+              <%= link_to 'Sign in as Admin', new_admin_session_path, 
+                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+            <% end %>
+          </div>
+        </div>
       </div>
     </section>
+
+    <!-- Stats Section -->
+    <section class="py-20 px-4 bg-white">
+      <div class="container mx-auto max-w-6xl">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="text-4xl font-bold text-blue-600 mb-2">1000+</div>
+            <div class="text-gray-600 text-lg">Active Users</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-blue-600 mb-2">5000+</div>
+            <div class="text-gray-600 text-lg">Sessions Completed</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-blue-600 mb-2">98%</div>
+            <div class="text-gray-600 text-lg">Satisfaction Rate</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-20 px-4">
+      <div class="container mx-auto max-w-6xl">
+        <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-16">What Our Users Say</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-2xl shadow-lg p-8 hover-scale">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                <i data-feather="user" class="w-6 h-6 text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Sarah Johnson</h4>
+                <p class="text-gray-600">Marketing Consultant</p>
+              </div>
+            </div>
+            <p class="text-gray-600">"The platform has revolutionized how I manage my consulting sessions. The scheduling system is intuitive and saves me hours every week."</p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-8 hover-scale">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                <i data-feather="user" class="w-6 h-6 text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Michael Chen</h4>
+                <p class="text-gray-600">Business Coach</p>
+              </div>
+            </div>
+            <p class="text-gray-600">"The payment integration is seamless, and the real-time collaboration features have made it much easier to work with my clients."</p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-8 hover-scale">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                <i data-feather="user" class="w-6 h-6 text-blue-600"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Emily Rodriguez</h4>
+                <p class="text-gray-600">Career Advisor</p>
+              </div>
+            </div>
+            <p class="text-gray-600">"As an admin, I love the analytics dashboard. It gives me valuable insights into session patterns and client engagement."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="full-width bg-gray-900 text-white py-12">
+      <div class="container mx-auto max-w-6xl px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="text-xl font-bold mb-4">Consulting Scheduler</h3>
+            <p class="text-gray-400">Streamline your consulting business with our powerful scheduling platform.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Pricing</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Support</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Help Center</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Documentation</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">API Reference</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Status</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Connect</h4>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                <i data-feather="twitter" class="w-6 h-6"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                <i data-feather="linkedin" class="w-6 h-6"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                <i data-feather="facebook" class="w-6 h-6"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
   </main>
+
+  <script>
+    feather.replace();
+  </script>
 </body>
 </html>

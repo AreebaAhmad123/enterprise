@@ -1,56 +1,57 @@
-<h1 class="text-2xl font-bold mb-4">Book a Session</h1>
+<div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md animate-fade-in mx-auto">
+  <h1 class="text-2xl font-bold mb-6 text-center">Book a Session</h1>
 
-<% if @meeting.errors.any? %>
-  <div class="bg-red-100 text-red-700 p-4 rounded mb-4">
-    <h2><%= pluralize(@meeting.errors.count, "error") %> prohibited this meeting from being saved:</h2>
-    <ul>
-      <% @meeting.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+  <%= form_with model: @meeting, url: user_meetings_path(@user), local: true, html: { class: "space-y-6" } do |f| %>
+    <% if @meeting.errors.any? %>
+      <div class="bg-red-100 text-red-700 p-4 rounded mb-4">
+        <h2 class="text-lg font-semibold mb-2"><%= pluralize(@meeting.errors.count, "error") %> prohibited this meeting from being saved:</h2>
+        <ul class="list-disc list-inside">
+          <% @meeting.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :title, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= f.text_field :title, required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+      <p class="mt-1 text-sm text-gray-500">Enter a brief title for the meeting.</p>
+    </div>
+
+    <div>
+      <%= f.label :description, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= f.text_area :description, rows: 4, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :consultant_id, "Consultant", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <% if @consultants.any? %>
+        <%= f.collection_select :consultant_id, @consultants, :id, :full_name, { prompt: "Select a consultant" }, { required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" } %>
+      <% else %>
+        <p class="text-red-500 text-sm">No consultants available. Please contact support.</p>
+        <%= f.hidden_field :consultant_id, value: nil %>
       <% end %>
-    </ul>
-  </div>
-<% end %>
+    </div>
 
-<%= form_with model: @meeting, url: user_meetings_path(@user), local: true do |f| %>
-  <div class="mb-4">
-    <%= f.label :title, class: "block text-sm font-medium text-gray-700", for: 'meeting_title' %>
-    <%= f.text_field :title, class: "mt-1 block w-full border p-2 rounded", id: 'meeting_title', aria: { describedby: 'title-help' } %>
-    <p id="title-help" class="text-sm text-gray-500">Enter a brief title for the meeting.</p>
-  </div>
+    <div>
+      <%= f.label :start_time, "Select Time Slot", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <% if @available_slots.present? %>
+        <%= f.select :start_time, options_for_select(@available_slots.map { |slot| [slot.strftime('%Y-%m-%d %H:%M'), slot] }, @meeting.start_time), { prompt: "Select a time slot" }, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+      <% else %>
+        <p class="text-red-500 text-sm">No available slots. Please try another date.</p>
+        <%= f.hidden_field :start_time, value: nil %>
+      <% end %>
+    </div>
 
-  <div class="mb-4">
-    <%= f.label :description, class: "block text-sm font-medium text-gray-700", for: 'meeting_description' %>
-    <%= f.text_area :description, rows: 3, class: "mt-1 block w-full border p-2 rounded", id: 'meeting_description' %>
-  </div>
+    <div>
+      <%= f.label :duration, "Duration (minutes)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= f.number_field :duration, min: 30, max: 120, step: 30, value: @meeting.duration || 60, required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+    </div>
 
-  <div class="mb-4">
-    <%= f.label :start_time, "Select Time Slot", class: "block text-sm font-medium text-gray-700", for: 'meeting_start_time' %>
-    <% if @available_slots.present? %>
-      <%= f.select :start_time, options_for_select(@available_slots.map { |slot| [slot.strftime('%Y-%m-%d %H:%M'), slot] }, @meeting.start_time), { prompt: 'Select a time slot' }, class: "mt-1 block w-full border p-2 rounded", id: 'meeting_start_time' %>
-    <% else %>
-      <p class="text-red-500 text-sm">No available slots. Please try another date.</p>
-      <%= f.hidden_field :start_time, value: nil %>
-    <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= f.label :duration, 'Duration (minutes)', class: "block text-sm font-medium text-gray-700", for: 'meeting_duration' %>
-    <%= f.number_field :duration, min: 30, max: 120, step: 30, value: @meeting.duration || 60, class: "mt-1 block w-full border p-2 rounded", id: 'meeting_duration' %>
-  </div>
-
-  <div class="mb-4">
-    <%= f.label :consultant_id, 'Consultant', class: "block text-sm font-medium text-gray-700", for: 'meeting_consultant_id' %>
-    <% if @consultants.any? %>
-      <%= f.collection_select :consultant_id, @consultants, :id, :email, { prompt: 'Select a consultant' }, class: "mt-1 block w-full border p-2 rounded", id: 'meeting_consultant_id' %>
-    <% else %>
-      <p class="text-red-500 text-sm">No consultants available. Please contact support.</p>
-      <%= f.hidden_field :consultant_id, value: nil %>
-    <% end %>
-  </div>
-
-  <div>
-    <%= f.submit 'Book Session', class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded" %>
-  </div>
-<% end %>
-
-<%= link_to 'Back', user_meetings_path(@user), class: "mt-4 inline-block text-blue-600 hover:underline" %>
+    <div class="flex gap-4">
+      <%= f.submit "Book Session", class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <%= link_to "Cancel", user_meetings_path(@user), class: "w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+    </div>
+  <% end %>
+</div>

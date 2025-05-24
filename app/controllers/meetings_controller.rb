@@ -1,7 +1,9 @@
 class MeetingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_meeting, only: [:show, :edit, :update, :destroy, :pay, :process_payment, :cancel]
-  before_action :ensure_client, only: [:new, :create, :pay, :process_payment, :cancel]
+  before_action :ensure_client, only: [:new, :create, :pay, :process_payment]
+  before_action :authorize_cancellation, only: [:cancel]
+  before_action :set_user_and_consultants, only: [:new, :create]
 
   def index
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
@@ -10,9 +12,12 @@ class MeetingsController < ApplicationController
                 else
                   @user.client_meetings.or(@user.consultant_meetings)
                 end
+
     if params[:start_date].present? && params[:end_date].present?
       begin
-        @meetings = @meetings.where(start_time: params[:start_date]..params[:end_date])
+        start_date = Date.parse(params[:start_date])
+        end_date = Date.parse(params[:end_date])
+        @meetings = @meetings.for_calendar(start_date, end_date)
       rescue ArgumentError
         flash[:alert] = 'Invalid date range.'
         @meetings = @meetings.none
@@ -21,21 +26,15 @@ class MeetingsController < ApplicationController
   end
 
   def new
-    @user = User.find(params[:user_id])
     @meeting = @user.client_meetings.build
     @meeting.start_time = params[:date] if params[:date].present?
-    @consultants = User.where(role: 'admin').order(:email)
-    @available_slots = generate_available_slots
   end
 
   def create
-    @user = User.find(params[:user_id])
     @meeting = @user.client_meetings.build(meeting_params)
     if @meeting.save
       redirect_to @meeting, notice: 'Meeting was successfully booked.'
     else
-      @consultants = User.where(role: 'admin').order(:email)
-      @available_slots = generate_available_slots
       render :new, status: :unprocessable_entity
     end
   end
@@ -60,10 +59,21 @@ class MeetingsController < ApplicationController
   end
 
   def cancel
-    if @meeting.client == current_user && @meeting.update(status: 'cancelled')
-      redirect_to user_meetings_path(current_user), notice: 'Meeting was successfully cancelled.'
+    if request.get?
+      render :cancel
     else
-      redirect_to @meeting, alert: 'Unable to cancel meeting.'
+      begin
+        if @meeting.update(meeting_params.merge(status: 'cancelled'))
+          MeetingMailer.cancellation_notification(@meeting, current_user).deliver_later
+          redirect_to user_meetings_path(current_user), notice: 'Meeting was successfully cancelled.'
+        else
+          render :cancel, status: :unprocessable_entity
+        end
+      rescue RedisClient::CannotConnectError => e
+        Rails.logger.error("Redis connection failed: #{e.message}")
+        flash[:alert] = 'Unable to queue cancellation email due to server issue. Meeting was cancelled.'
+        redirect_to user_meetings_path(current_user)
+      end
     end
   end
 
@@ -84,6 +94,12 @@ class MeetingsController < ApplicationController
     rescue Stripe::CardError => e
       flash[:alert] = e.message
       render :pay, status: :unprocessable_entity
+    rescue Stripe::AuthenticationError => e
+      flash[:alert] = "Stripe authentication failed: #{e.message}"
+      render :pay, status: :unprocessable_entity
+    rescue => e
+      flash[:alert] = "Payment failed: #{e.message}"
+      render :pay, status: :unprocessable_entity
     end
   end
 
@@ -103,22 +119,47 @@ class MeetingsController < ApplicationController
     @meeting = Meeting.find(params[:id])
   end
 
+  def set_user_and_consultants
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    @consultants = User.available_consultants
+    @available_slots = generate_available_slots
+  end
+
   def meeting_params
-    params.require(:meeting).permit(:title, :description, :start_time, :duration, :consultant_id)
+    params.require(:meeting).permit(
+      :title, 
+      :description, 
+      :start_time, 
+      :duration, 
+      :consultant_id, 
+      :cancellation_reason
+    )
   end
 
   def ensure_client
     redirect_to root_path, alert: 'Only clients can perform this action.' unless current_user.client?
   end
 
+  def authorize_cancellation
+    unless @meeting.client == current_user || @meeting.consultant == current_user
+      redirect_to @meeting, alert: 'You are not authorized to cancel this meeting.'
+    end
+  end
+
   def generate_available_slots
     start_date = params[:date].present? ? Date.parse(params[:date]) : Date.today
     end_date = start_date + 7.days
     slots = []
+    current_time = Time.current.in_time_zone('Asia/Karachi')
+    
     (start_date..end_date).each do |day|
       (9..17).each do |hour| # 9 AM to 5 PM
-        slot = day.to_time.change(hour: hour, min: 0)
-        slots << slot unless Meeting.exists?(start_time: slot)
+        [0, 30].each do |minute| # 30-minute increments
+          slot = day.to_time.change(hour: hour, min: minute).in_time_zone('Asia/Karachi')
+          if slot > current_time && Meeting.slot_available?(slot, @consultants.pluck(:id))
+            slots << slot
+          end
+        end
       end
     end
     slots

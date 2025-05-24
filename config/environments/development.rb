@@ -26,7 +26,7 @@ Rails.application.configure do
   if Rails.root.join('tmp/caching-dev.txt').exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
-
+    config.cache_store = :memory_store
     config.public_file_server.headers = {
       'Cache-Control' => "public, max-age=#{2.days.to_i}"
     }
@@ -35,7 +35,7 @@ Rails.application.configure do
 
     config.cache_store = :memory_store
   end
-
+  config.active_storage.service = :local
   # Store uploaded files on the local file system (see config/storage.yml for options).
   # config.active_storage.service = :local
 
@@ -50,9 +50,12 @@ Rails.application.configure do
   # Raise exceptions for disallowed deprecations.
   config.active_support.disallowed_deprecation = :raise
 
+  config.active_support.deprecation_warnings = :all
+  config.action_controller.raise_on_missing_callback_actions = true
   # Tell Active Support which deprecation messages to disallow.
   config.active_support.disallowed_deprecation_warnings = []
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.smtp_settings = {
     address: 'smtp.gmail.com',
     port: 587,

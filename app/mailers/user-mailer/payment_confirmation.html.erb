@@ -1,0 +1,10 @@
+<h1>Payment Confirmation</h1>
+<p>Dear <%= @user.email %>,</p>
+<p>Your payment for Meeting #<%= @meeting.id %> has been successfully processed.</p>
+<p><strong>Details:</strong></p>
+<ul>
+  <li>Title: <%= @meeting.title %></li>
+  <li>Date: <%= @meeting.start_time.strftime('%B %d, %Y at %I:%M %p') %></li>
+  <li>Amount: $50.00</li>
+</ul>
+<p>Thank you!</p>

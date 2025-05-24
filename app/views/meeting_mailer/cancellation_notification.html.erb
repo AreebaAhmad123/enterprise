@@ -1,0 +1,10 @@
+<h1>Meeting Cancellation</h1>
+<p>Dear <%= @meeting.client.email %> and <%= @meeting.consultant.email %>,</p>
+<p>The following meeting has been cancelled by <%= @user.email %>:</p>
+<p><strong>Details:</strong></p>
+<ul>
+  <li>Title: <%= @meeting.title %></li>
+  <li>Date: <%= @meeting.start_time.strftime('%B %d, %Y at %I:%M %p') %></li>
+  <li>Reason: <%= @meeting.cancellation_reason %></li>
+</ul>
+<p>Please contact support if you have any questions.</p>

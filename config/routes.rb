@@ -1,46 +1,40 @@
 Rails.application.routes.draw do
-  # Authentication
-  devise_for :users, controllers: { registrations: 'registrations' }
-
-  # Root and User Profile
+  devise_for :users, controllers: { 
+    registrations: 'users/registrations',
+    sessions: 'users/sessions'
+  }
+  
   root 'home#index'
   get 'profile', to: 'users#profile'
+  
+  devise_scope :user do
+    get 'admin/sign_in', to: 'users/sessions#new_admin', as: :new_admin_session
+    post 'admin/sign_in', to: 'users/sessions#create_admin', as: :admin_session
+  end
 
-  # Meetings
-  # Nested under users for user-specific actions (index, new, create)
   resources :users, only: [] do
     resources :meetings, only: [:index, :new, :create]
   end
 
-  # Top-level meetings for general actions and calendar
   resources :meetings, only: [:index, :show, :edit, :update, :destroy] do
-    # Comments for meetings
     resources :comments, only: [:create]
-
-    # Stripe payments
     resources :payments, only: [:create]
-
-    # Custom meeting actions
     member do
-      get :cancel          # GET /meetings/:id/cancel
-      get :pay             # GET /meetings/:id/pay
-      post :process_payment # POST /meetings/:id/process_payment
+      match :cancel, via: [:get, :patch] # Changed to support GET and PATCH
+      get :pay
+      post :process_payment
     end
-
-    # Admin tools
     collection do
-      get :export_csv     # GET /meetings/export_csv
+      get :export_csv
     end
   end
 
-  # Admin Namespace
   namespace :admin do
-    get 'dashboard', to: 'dashboard#index' # Admin dashboard
-    resources :meetings, only: [:index, :show, :destroy] # Admin meeting management
-    resources :users, only: [:index, :show] # Admin user management
+    get 'dashboard', to: 'dashboard#index'
+    resources :meetings, only: [:index, :show, :destroy]
+    resources :users, only: [:index, :show]
   end
 
-  # Error Pages
   match '/404', to: 'errors#not_found', via: :all
   match '/500', to: 'errors#server_error', via: :all
 end

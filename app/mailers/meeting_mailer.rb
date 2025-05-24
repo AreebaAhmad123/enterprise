@@ -10,4 +10,10 @@ class MeetingMailer < ApplicationMailer
     @payment = payment
     mail(to: @user.email, subject: 'Payment Receipt')
   end
+
+  def cancellation_notification(meeting, user)
+    @meeting = meeting
+    @user = user
+    mail(to: [@meeting.client.email, @meeting.consultant.email], subject: "Meeting ##{meeting.id} Cancelled")
+  end
 end

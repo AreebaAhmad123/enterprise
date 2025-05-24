@@ -86,3 +86,4 @@ gem 'jwt'
 gem 'trix'
 gem 'foreman'
 gem 'actiontext'
+gem 'letter_opener', group: :development

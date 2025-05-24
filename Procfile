@@ -1,3 +1,4 @@
-web: rails server -p 3000
-worker: bundle exec sidekiq
+web: bin/rails server -p 3000
+css: bin/rails tailwindcss:watch
 redis: redis-server
+worker: bundle exec sidekiq

@@ -5,10 +5,7 @@
 
   <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6" }) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
-    <div class="field">
-        <%= f.label :name %><br />
-        <%= f.text_field :name, autocomplete: "name", class: "border rounded p-2 w-full" %>
-    </div>
+
     <div>
       <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
       <div class="mt-1">
