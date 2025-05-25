@@ -1,71 +1,87 @@
-<div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md animate-fade-in mx-auto">
-  <h2 class="text-3xl font-extrabold text-center text-gray-900 mb-6 flex items-center justify-center">
-    <span class="mr-2">📝</span> Sign Up
-  </h2>
+<div class="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
+      Create your account
+    </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Join our platform today
+    </p>
+  </div>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
-    <%= render "devise/shared/error_messages", resource: resource %>
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
 
-    <div class="field">
-      <%= f.label :first_name, class: "block text-sm font-medium text-gray-700" %>
-      <div class="mt-1">
-        <%= f.text_field :first_name, required: true, autocomplete: "given-name", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
-      </div>
-    </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <%= f.label :first_name, class: "block text-sm font-medium text-gray-700" %>
+            <div class="mt-1">
+              <%= f.text_field :first_name, autofocus: true, required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+            </div>
+          </div>
 
-    <div class="field">
-      <%= f.label :last_name, class: "block text-sm font-medium text-gray-700" %>
-      <div class="mt-1">
-        <%= f.text_field :last_name, required: true, autocomplete: "family-name", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
-      </div>
-    </div>
+          <div>
+            <%= f.label :last_name, class: "block text-sm font-medium text-gray-700" %>
+            <div class="mt-1">
+              <%= f.text_field :last_name, required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+            </div>
+          </div>
+        </div>
 
-    <div class="field">
-      <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
-      <div class="mt-1">
-        <%= f.email_field :email, autocomplete: "email", required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
-      </div>
-    </div>
+        <div>
+          <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= f.email_field :email, autocomplete: "email", required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+          </div>
+        </div>
 
-    <div class="field">
-      <%= f.label :password, class: "block text-sm font-medium text-gray-700" %>
-      <div class="mt-1">
-        <%= f.password_field :password, autocomplete: "new-password", required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
-        <% if @minimum_password_length %>
-          <p class="mt-2 text-sm text-gray-500">Minimum <%= @minimum_password_length %> characters</p>
-        <% end %>
-      </div>
-    </div>
+        <div>
+          <%= f.label :password, class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= f.password_field :password, autocomplete: "new-password", required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+            <% if @minimum_password_length %>
+              <p class="mt-2 text-sm text-gray-500">Minimum <%= @minimum_password_length %> characters</p>
+            <% end %>
+          </div>
+        </div>
 
-    <div class="field">
-      <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700" %>
-      <div class="mt-1">
-        <%= f.password_field :password_confirmation, autocomplete: "new-password", required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
-      </div>
-    </div>
- 
+        <div>
+          <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+          </div>
+        </div>
 
-    <% if current_user&.admin? %>
-      <div class="field">
-        <%= f.label :role, class: "block text-sm font-medium text-gray-700" %>
-        <div class="mt-1">
-          <%= f.select :role, [%w[Client client], %w[User user], %w[Admin admin]], {}, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+        <div>
+          <%= f.label :consultant_role, "I want to join as a", class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= f.select :consultant_role, 
+                [["Client", false], ["Consultant", true]], 
+                { prompt: "Select your role" }, 
+                { required: true, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" } %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.submit "Create Account", class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+        </div>
+      <% end %>
+
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">Already have an account?</span>
+          </div>
+        </div>
+
+        <div class="mt-6 text-center">
+          <%= render "devise/shared/links" %>
         </div>
       </div>
-    <% else %>
-      <%= f.hidden_field :role, value: "client" %>
-    <% end %>
-
-    <% unless current_user&.admin? %>
-      <%= f.hidden_field :role, value: "client" %>
-    <% end %>
-
-    <div class="actions">
-      <%= f.submit "Sign up", class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
     </div>
-  <% end %>
-
-  <div class="text-center mt-4">
-    <%= render "devise/shared/links" %>
   </div>
 </div>

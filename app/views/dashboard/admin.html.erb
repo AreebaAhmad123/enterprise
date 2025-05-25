@@ -1,0 +1,149 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-4xl font-bold text-gray-900">Admin Dashboard</h1>
+        <p class="mt-2 text-gray-600">Welcome back, <%= current_user.full_name %></p>
+      </div>
+      <div class="flex items-center space-x-4">
+        <%= link_to 'Manage Users', admin_users_path, class: 'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition' %>
+        <%= link_to 'View Profile', edit_user_registration_path, class: 'text-gray-600 hover:text-gray-900' %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">Total Users</h3>
+      <p class="text-3xl font-bold text-purple-600"><%= @total_users %></p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">Total Consultants</h3>
+      <p class="text-3xl font-bold text-blue-600"><%= @total_consultants %></p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">Total Clients</h3>
+      <p class="text-3xl font-bold text-green-600"><%= @total_clients %></p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">Total Meetings</h3>
+      <p class="text-3xl font-bold text-indigo-600"><%= @total_meetings %></p>
+    </div>
+  </div>
+
+  <!-- Active Sessions -->
+  <div class="bg-white rounded-lg shadow mb-8">
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-900">Active Sessions</h2>
+        <%= link_to 'View All Sessions', admin_meetings_path, class: 'text-blue-600 hover:text-blue-800' %>
+      </div>
+    </div>
+    <div class="p-6">
+      <% if @active_sessions.present? %>
+        <div class="space-y-4">
+          <% @active_sessions.each do |meeting| %>
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div>
+                <h3 class="font-medium text-gray-900"><%= meeting.title %></h3>
+                <p class="text-sm text-gray-600">
+                  <%= meeting.start_time.strftime('%B %d, %Y at %I:%M %p') %> 
+                  (<%= meeting.duration %> minutes)
+                </p>
+                <p class="text-sm text-gray-600">
+                  Client: <%= meeting.client.full_name %> | 
+                  Consultant: <%= meeting.consultant.full_name %>
+                </p>
+              </div>
+              <div class="flex space-x-2">
+                <%= link_to 'View Details', admin_meeting_path(meeting), class: 'bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition' %>
+                <%= link_to 'Cancel', cancel_admin_meeting_path(meeting), 
+                    data: { confirm: 'Are you sure you want to cancel this session?' },
+                    class: 'bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-600 text-center py-4">No active sessions</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Recent Users -->
+  <div class="bg-white rounded-lg shadow mb-8">
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-900">Recent Users</h2>
+        <%= link_to 'View All Users', admin_users_path, class: 'text-blue-600 hover:text-blue-800' %>
+      </div>
+    </div>
+    <div class="p-6">
+      <% if @recent_users.present? %>
+        <div class="space-y-4">
+          <% @recent_users.each do |user| %>
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div>
+                <h3 class="font-medium text-gray-900"><%= user.full_name %></h3>
+                <p class="text-sm text-gray-600"><%= user.email %></p>
+                <p class="text-sm text-gray-600">Role: <%= user.role.titleize %></p>
+              </div>
+              <div class="flex space-x-2">
+                <%= link_to 'View Profile', admin_user_path(user), class: 'text-blue-600 hover:text-blue-800' %>
+                <%= link_to 'Edit', edit_admin_user_path(user), class: 'text-gray-600 hover:text-gray-900' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-600 text-center py-4">No recent users</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- System Activity -->
+  <div class="bg-white rounded-lg shadow">
+    <div class="p-6 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-900">System Activity</h2>
+    </div>
+    <div class="p-6">
+      <% if @system_activity.present? %>
+        <div class="space-y-4">
+          <% @system_activity.each do |activity| %>
+            <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+              <div class="flex-shrink-0">
+                <% case activity[:type] %>
+                <% when 'user_created' %>
+                  <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                  </div>
+                <% when 'meeting_cancelled' %>
+                  <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                <% when 'payment_received' %>
+                  <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                <% end %>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-900"><%= activity[:description] %></p>
+                <p class="text-sm text-gray-600"><%= activity[:created_at].strftime('%B %d, %Y at %I:%M %p') %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-600 text-center py-4">No recent system activity</p>
+      <% end %>
+    </div>
+  </div>
+</div> 

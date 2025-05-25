@@ -83,7 +83,7 @@ gem "cssbundling-rails", "~> 1.4"
 
 # A ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard. https://github.com/jwt/ruby-jwt
 gem 'jwt'
-gem 'trix'
+# gem 'trix'
 gem 'foreman'
 gem 'actiontext'
 gem 'letter_opener', group: :development

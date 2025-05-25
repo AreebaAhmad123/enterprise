@@ -35,6 +35,13 @@ Rails.application.routes.draw do
     resources :users, only: [:index, :show]
   end
 
+  # Dashboard routes
+  get 'dashboard', to: 'dashboard#client'
+  get 'dashboard/consultant', to: 'dashboard#consultant'
+
   match '/404', to: 'errors#not_found', via: :all
   match '/500', to: 'errors#server_error', via: :all
+
+  # Catch all undefined routes and redirect to 404
+  match '*path', to: 'errors#not_found', via: :all
 end

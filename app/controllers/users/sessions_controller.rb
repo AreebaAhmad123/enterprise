@@ -29,14 +29,18 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   def auth_options
-    { scope: :user, recall: "#{controller_path}#new_admin" }
+    if action_name == 'create_admin'
+      { scope: :user, recall: "#{controller_path}#new_admin" }
+    else
+      { scope: :user }
+    end
   end
 
   def after_sign_in_path_for(resource)
     if resource.acting_as_admin?
       admin_dashboard_path
     else
-      super
+      dashboard_path
     end
   end
 end 

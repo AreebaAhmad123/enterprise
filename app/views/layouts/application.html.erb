@@ -6,11 +6,7 @@
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "trix", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "trix", "data-turbo-track": "reload" %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
@@ -35,10 +31,12 @@
     <nav class="bg-black shadow-md">
       <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <%= link_to '📅 Consulting Scheduler', root_path, class: 'text-white font-semibold text-xl' %>
-        <div class="space-x-4">
+        <div class="flex items-center space-x-4">
           <% if current_user %>
-            <%= link_to 'Profile', profile_path, class: 'text-white hover:text-gray-200 transition' %>
-            <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: 'text-white hover:text-red-200 transition' %>
+            <div class="flex items-center space-x-4">
+              <%= link_to 'Profile', profile_path, class: 'text-white hover:text-gray-200 transition' %>
+              <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: 'text-white hover:text-red-200 transition' %>
+            </div>
           <% else %>
             <%= link_to 'Login', new_user_session_path, class: 'text-white hover:text-gray-200 transition' %>
             <%= link_to 'Sign Up', new_user_registration_path, class: 'text-white hover:text-gray-200 transition' %>

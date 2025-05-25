@@ -7,11 +7,7 @@ class MeetingsController < ApplicationController
 
   def index
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
-    @meetings = if current_user.admin? && params[:filter_user_id].present?
-                  User.find(params[:filter_user_id]).client_meetings.or(User.find(params[:filter_user_id]).consultant_meetings)
-                else
-                  @user.client_meetings.or(@user.consultant_meetings)
-                end
+    @meetings = @user.client_meetings.or(@user.consultant_meetings)
 
     if params[:start_date].present? && params[:end_date].present?
       begin
@@ -20,9 +16,12 @@ class MeetingsController < ApplicationController
         @meetings = @meetings.for_calendar(start_date, end_date)
       rescue ArgumentError
         flash[:alert] = 'Invalid date range.'
-        @meetings = @meetings.none
+        @meetings = Meeting.none
       end
     end
+
+    # Ensure @meetings is never nil
+    @meetings ||= Meeting.none
   end
 
   def new
@@ -32,6 +31,14 @@ class MeetingsController < ApplicationController
 
   def create
     @meeting = @user.client_meetings.build(meeting_params)
+    
+    # Prevent consultants from booking with themselves
+    if @meeting.consultant_id == @meeting.client_id
+      flash.now[:alert] = "A consultant cannot book a meeting with themselves"
+      render :new, status: :unprocessable_entity
+      return
+    end
+
     if @meeting.save
       redirect_to @meeting, notice: 'Meeting was successfully booked.'
     else
@@ -104,11 +111,12 @@ class MeetingsController < ApplicationController
   end
 
   def export_csv
-    return redirect_to root_path, alert: 'Only admins can export meetings.' unless current_user.admin?
+    return redirect_to root_path, alert: 'Only consultants can export meetings.' unless current_user.consultant?
     @meetings = Meeting.all
     respond_to do |format|
       format.csv do
-        send_data generate_csv, filename: "meetings-#{Date.today}.csv"
+        headers['Content-Disposition'] = "attachment; filename=\"meetings-#{Date.today}.csv\""
+        headers['Content-Type'] ||= 'text/csv'
       end
     end
   end
@@ -121,7 +129,7 @@ class MeetingsController < ApplicationController
 
   def set_user_and_consultants
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
-    @consultants = User.available_consultants
+    @consultants = User.where("consultant_role = ? OR role = ?", true, 'admin').order(:email)
     @available_slots = generate_available_slots
   end
 

@@ -3,8 +3,9 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     super do |resource|
-      # Set default role to "client" unless created by an admin
-      resource.role = "client" unless resource.role == "admin" && current_user&.admin?
+      if resource.persisted?
+        resource.update(consultant_role: params[:user][:consultant_role] == "true")
+      end
     end
   end
 

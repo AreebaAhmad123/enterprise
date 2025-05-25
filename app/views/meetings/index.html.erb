@@ -13,8 +13,8 @@
     <% end %>
   </div>
 
-  <!-- Admin Filters -->
-  <% if current_user.admin? %>
+  <!-- Consultant Filters -->
+  <% if current_user.consultant? %>
     <div class="mb-8 bg-white p-6 rounded-xl shadow-lg">
       <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
         <svg class="w-6 h-6 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -66,7 +66,7 @@
                   <% end %>
                 </span>
                 <div class="flex space-x-2">
-                  <% if current_user == meeting.client || current_user.admin? %>
+                  <% if current_user == meeting.client || current_user.consultant? %>
                     <% unless meeting.cancelled? %>
                       <%= link_to cancel_meeting_path(meeting), data: { turbo_method: :get, turbo_confirm: 'Are you sure?', tippy_content: 'Cancel this meeting' }, class: 'text-red-500 hover:text-red-700' do %>
                         <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -107,7 +107,7 @@
                   <% end %>
                 </span>
                 <div class="flex space-x-2">
-                  <% if meeting.client && (current_user == meeting.client || current_user.admin?) %>
+                  <% if meeting.client && (current_user == meeting.client || current_user.consultant?) %>
                     <% unless meeting.cancelled? %>
                       <%= link_to cancel_meeting_path(meeting), data: { turbo_method: :get, turbo_confirm: 'Are you sure?', tippy_content: 'Cancel this meeting' }, class: 'text-red-500 hover:text-red-700' do %>
                         <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -187,7 +187,7 @@
                 </svg>
                 Comment
               <% end %>
-              <% if meeting.client && (current_user == meeting.client || current_user.admin?) %>
+              <% if meeting.client && (current_user == meeting.client || current_user.consultant?) %>
                 <% unless meeting.cancelled? %>
                   <%= link_to cancel_meeting_path(meeting), data: { turbo_method: :get, turbo_confirm: 'Are you sure?', tippy_content: 'Cancel this meeting' }, class: 'inline-flex items-center text-red-600 hover:text-red-800' do %>
                     <svg class="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

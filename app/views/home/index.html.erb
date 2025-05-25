@@ -101,7 +101,7 @@
     <section id="features" class="py-20 px-4">
       <div class="container mx-auto max-w-6xl">
         <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-16">Why Choose Our Platform</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover-scale animate-fade-in">
             <div class="feature-icon">
               <i data-feather="calendar" class="w-8 h-8 text-blue-600"></i>
@@ -143,21 +143,6 @@
                   class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
             <% else %>
               <%= link_to 'Sign in to Pay', new_user_session_path, 
-                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
-            <% end %>
-          </div>
-
-          <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover-scale animate-fade-in" style="animation-delay: 0.3s;">
-            <div class="feature-icon">
-              <i data-feather="bar-chart-2" class="w-8 h-8 text-blue-600"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Admin Dashboard</h3>
-            <p class="text-gray-600 mb-6">Comprehensive analytics and management tools for administrators.</p>
-            <% if user_signed_in? && current_user.admin? %>
-              <%= link_to 'Access Dashboard', admin_dashboard_path, 
-                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
-            <% else %>
-              <%= link_to 'Sign in as Admin', new_admin_session_path, 
                   class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
             <% end %>
           </div>

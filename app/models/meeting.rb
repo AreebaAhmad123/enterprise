@@ -7,6 +7,7 @@ class Meeting < ApplicationRecord
   validates :status, inclusion: { in: %w[scheduled cancelled completed] }
   validates :duration, numericality: { only_integer: true, greater_than_or_equal_to: 30, less_than_or_equal_to: 120 }, allow_nil: true
   validates :cancellation_reason, presence: true, if: :cancelled?
+  validate :client_and_consultant_cannot_be_same
 
   scope :upcoming, -> { where("start_time > ?", Time.current).order(:start_time) }
   scope :past, -> { where("start_time <= ?", Time.current).order(:start_time) }
@@ -53,5 +54,13 @@ class Meeting < ApplicationRecord
                   .none?
     
     cancelled_meetings.exists? || no_meetings
+  end
+
+  private
+
+  def client_and_consultant_cannot_be_same
+    if client_id == consultant_id
+      errors.add(:base, "A consultant cannot book a meeting with themselves")
+    end
   end
 end

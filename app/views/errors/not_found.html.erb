@@ -1,0 +1,123 @@
+<%# Override the default layout for this page %>
+<% content_for :layout, "error" %>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+  <!-- Background Elements -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+  </div>
+
+  <div class="sm:mx-auto sm:w-full sm:max-w-4xl relative">
+    <div class="text-center">
+      <!-- 404 Illustration -->
+      <div class="relative mb-8">
+        <div class="w-full max-w-2xl mx-auto">
+          <svg class="w-full h-auto" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background Circle -->
+            <circle cx="400" cy="300" r="250" fill="url(#gradient)" opacity="0.1"/>
+            
+            <!-- 404 Text -->
+            <text x="400" y="300" text-anchor="middle" class="text-9xl font-extrabold fill-current text-blue-600" style="font-size: 200px;">404</text>
+            
+            <!-- Decorative Elements -->
+            <path d="M200,150 Q400,50 600,150" stroke="url(#lineGradient)" stroke-width="4" fill="none" class="animate-draw"/>
+            <path d="M150,300 Q400,400 650,300" stroke="url(#lineGradient)" stroke-width="4" fill="none" class="animate-draw animation-delay-1000"/>
+            
+            <!-- Floating Elements -->
+            <circle cx="200" cy="200" r="20" fill="#60A5FA" class="animate-float"/>
+            <circle cx="600" cy="200" r="15" fill="#8B5CF6" class="animate-float animation-delay-2000"/>
+            <circle cx="300" cy="400" r="25" fill="#EC4899" class="animate-float animation-delay-1000"/>
+            
+            <!-- Gradients -->
+            <defs>
+              <linearGradient id="gradient" x1="0" y1="0" x2="800" y2="600">
+                <stop offset="0%" stop-color="#60A5FA"/>
+                <stop offset="100%" stop-color="#8B5CF6"/>
+              </linearGradient>
+              <linearGradient id="lineGradient" x1="0" y1="0" x2="800" y2="0">
+                <stop offset="0%" stop-color="#60A5FA"/>
+                <stop offset="50%" stop-color="#8B5CF6"/>
+                <stop offset="100%" stop-color="#EC4899"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+
+      <h2 class="mt-8 text-4xl font-bold text-gray-900 tracking-tight">
+        Oops! Page Not Found
+      </h2>
+      <p class="mt-4 text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+        The page you're looking for seems to have vanished into thin air. 
+        Don't worry, we'll help you find your way back.
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-12 flex flex-col sm:flex-row justify-center gap-4">
+      <%= link_to root_path, class: "group inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition duration-150 ease-in-out transform hover:scale-105 hover:shadow-lg" do %>
+        <svg class="w-5 h-5 mr-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+        </svg>
+        Back to Home
+      <% end %>
+
+      <%= link_to "#", class: "group inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition duration-150 ease-in-out transform hover:scale-105 hover:shadow-lg" do %>
+        <svg class="w-5 h-5 mr-2 transform group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Contact Support
+      <% end %>
+    </div>
+
+    <!-- Helpful Links -->
+    <div class="mt-12 text-center">
+      <p class="text-sm text-gray-500">You might want to check out:</p>
+      <div class="mt-4 flex flex-wrap justify-center gap-4">
+        <%= link_to "Dashboard", dashboard_path, class: "text-sm text-blue-600 hover:text-blue-500 transition-colors duration-150" %>
+        <%= link_to "Meetings", meetings_path, class: "text-sm text-blue-600 hover:text-blue-500 transition-colors duration-150" %>
+        <%= link_to "Profile", profile_path, class: "text-sm text-blue-600 hover:text-blue-500 transition-colors duration-150" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :styles do %>
+  <style>
+    @keyframes blob {
+      0% { transform: translate(0px, 0px) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+    @keyframes draw {
+      0% { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+      100% { stroke-dasharray: 1000; stroke-dashoffset: 0; }
+    }
+    .animate-blob {
+      animation: blob 7s infinite;
+    }
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    .animate-draw {
+      animation: draw 2s ease-out forwards;
+    }
+    .animation-delay-1000 {
+      animation-delay: 1s;
+    }
+    .animation-delay-2000 {
+      animation-delay: 2s;
+    }
+    .animation-delay-4000 {
+      animation-delay: 4s;
+    }
+  </style>
+<% end %> 

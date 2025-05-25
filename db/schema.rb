@@ -73,6 +73,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_25_000005) do
     t.datetime "updated_at", null: false
     t.integer "duration"
     t.text "cancellation_reason"
+    t.decimal "amount", precision: 10, scale: 2, default: "50.0"
     t.index ["client_id"], name: "index_meetings_on_client_id"
     t.index ["consultant_id"], name: "index_meetings_on_consultant_id"
   end

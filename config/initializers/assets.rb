@@ -14,4 +14,4 @@
 Rails.application.config.assets.version = "1.0"
 Rails.application.config.assets.paths << Rails.root.join("app/javascript")
 Rails.application.config.assets.paths << Rails.root.join("vendor/assets/stylesheets") # Add for gem assets
-Rails.application.config.assets.precompile += %w[application.js trix.js application.css trix.css]
+Rails.application.config.assets.precompile += %w[application.js application.css]

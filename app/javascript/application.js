@@ -1,11 +1,7 @@
 import "@hotwired/turbo-rails"
 import "controllers"
-import "trix"
-import "@rails/actiontext"
-import Rails from '@rails/ujs'
+// import "trix"
 import "./custom"
-
-Rails.start()
 
 document.addEventListener('turbo:load', () => {
   const token = document.querySelector('meta[name="csrf-token"]')?.content
@@ -18,3 +14,8 @@ document.addEventListener('turbo:load', () => {
     })
   }
 })
+
+document.addEventListener('DOMContentLoaded', () => {
+  const focused = document.querySelector(':focus');
+  if (!focused) document.querySelector('input[autofocus]')?.focus();
+});

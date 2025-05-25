@@ -1,15 +1,17 @@
 validates :amount, numericality: { greater_than: 0 }
 
 class Payment < ApplicationRecord
-  belongs_to :session
+  belongs_to :meeting
   belongs_to :user
 
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validates :currency, presence: true
-  validates :status, presence: true, inclusion: { in: %w[pending succeeded failed refunded] }
-  validates :stripe_payment_intent_id, uniqueness: true, allow_nil: true
+  validates :status, presence: true, inclusion: { in: %w[pending completed failed refunded] }
+  validates :stripe_payment_intent_id, presence: true, uniqueness: true
+  validates :card_brand, presence: true
+  validates :card_last4, presence: true, length: { is: 4 }
 
-  before_validation :set_default_status, on: :create
+  before_validation :set_defaults, on: :create
   after_create :create_stripe_payment_intent
   after_update :handle_status_change
 
@@ -41,27 +43,34 @@ class Payment < ApplicationRecord
   end
 
   def refund
-    return false unless succeeded?
-
+    return false if refunded?
+    
     begin
       refund = Stripe::Refund.create(
-        payment_intent: stripe_payment_intent_id
+        payment_intent: stripe_payment_intent_id,
+        reason: 'requested_by_customer'
       )
-
-      if refund.status == 'succeeded'
-        update!(status: 'refunded')
-        true
-      else
-        false
-      end
+      
+      update(
+        status: 'refunded',
+        refunded_at: Time.current,
+        stripe_refund_id: refund.id
+      )
+      true
     rescue Stripe::StripeError => e
+      errors.add(:base, "Refund failed: #{e.message}")
       false
     end
   end
 
+  def refunded?
+    status == 'refunded'
+  end
+
   private
 
-  def set_default_status
+  def set_defaults
+    self.currency ||= 'usd'
     self.status ||= 'pending'
   end
 
