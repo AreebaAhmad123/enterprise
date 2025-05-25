@@ -15,6 +15,7 @@ class Admin::UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
+      @user.update(role: params[:user][:role]) if params[:user][:role].present?
       redirect_to admin_users_path, notice: 'User updated.'
     else
       render :edit
@@ -33,7 +34,7 @@ class Admin::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :role)
+    params.require(:user).permit(:email)
   end
 
   def ensure_admin

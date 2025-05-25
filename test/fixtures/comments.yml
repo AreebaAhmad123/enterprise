@@ -1,11 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  content: MyText
+  content: "This is a test comment for the first meeting"
   user: one
   meeting: one
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
 
 two:
-  content: MyText
+  content: "This is a test comment for the second meeting"
   user: two
   meeting: two
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

@@ -66,7 +66,7 @@ class MeetingsController < ApplicationController
   end
 
   def cancel
-    if request.get?
+    if request.get? || request.head?
       render :cancel
     else
       begin
