@@ -26,7 +26,7 @@
       background: linear-gradient(135deg, #f6f8fd 0%, #f1f4f9 100%);
     }
     .hero-bg {
-      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
+      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url("https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80");
       background-size: cover;
       background-position: center;
       width: 100vw;
@@ -48,7 +48,7 @@
       background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: "Inter", sans-serif;
       overflow-x: hidden;
     }
     .full-width {
@@ -85,13 +85,13 @@
         </p>
         <div class="flex flex-col sm:flex-row justify-center items-center gap-4 animate-fade-in" style="animation-delay: 0.4s;">
           <% if user_signed_in? %>
-            <%= link_to 'View Your Meetings', user_meetings_path(current_user), 
-                class: 'w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl glass-effect' %>
+            <%= link_to "View Your Meetings", user_meetings_path(current_user),
+                class: "w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl glass-effect" %>
           <% else %>
-            <%= link_to 'Get Started', new_user_registration_path, 
-                class: 'w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl glass-effect' %>
-            <%= link_to 'Sign In', new_user_session_path, 
-                class: 'w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg hover:shadow-xl glass-effect' %>
+            <%= link_to "Get Started", new_user_registration_path,
+                class: "w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl glass-effect" %>
+            <%= link_to "Sign In", new_user_session_path,
+                class: "w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg hover:shadow-xl glass-effect" %>
           <% end %>
         </div>
       </div>
@@ -109,11 +109,11 @@
             <h3 class="text-xl font-bold text-gray-900 mb-3">Smart Scheduling</h3>
             <p class="text-gray-600 mb-6">Interactive calendars with real-time availability and instant booking confirmation.</p>
             <% if user_signed_in? %>
-              <%= link_to 'View Calendar', user_meetings_path(current_user), 
-                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+              <%= link_to "View Calendar", user_meetings_path(current_user),
+                  class: "inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors" %>
             <% else %>
-              <%= link_to 'Sign in to Schedule', new_user_session_path, 
-                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+              <%= link_to "Sign in to Schedule", new_user_session_path,
+                  class: "inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors" %>
             <% end %>
           </div>
 
@@ -124,11 +124,11 @@
             <h3 class="text-xl font-bold text-gray-900 mb-3">Live Collaboration</h3>
             <p class="text-gray-600 mb-6">Rich text comments and real-time updates for seamless communication.</p>
             <% if user_signed_in? %>
-              <%= link_to 'Start Collaborating', user_meetings_path(current_user), 
-                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+              <%= link_to "Start Collaborating", user_meetings_path(current_user),
+                  class: "inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors" %>
             <% else %>
-              <%= link_to 'Sign in to Comment', new_user_session_path, 
-                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+              <%= link_to "Sign in to Comment", new_user_session_path,
+                  class: "inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors" %>
             <% end %>
           </div>
 
@@ -139,11 +139,11 @@
             <h3 class="text-xl font-bold text-gray-900 mb-3">Secure Payments</h3>
             <p class="text-gray-600 mb-6">Fast and secure transactions powered by Stripe integration.</p>
             <% if user_signed_in? %>
-              <%= link_to 'Book & Pay', user_meetings_path(current_user), 
-                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+              <%= link_to "Book & Pay", user_meetings_path(current_user),
+                  class: "inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors" %>
             <% else %>
-              <%= link_to 'Sign in to Pay', new_user_session_path, 
-                  class: 'inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors' %>
+              <%= link_to "Sign in to Pay", new_user_session_path,
+                  class: "inline-block bg-blue-50 text-blue-600 px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-100 transition-colors" %>
             <% end %>
           </div>
         </div>
@@ -198,7 +198,7 @@
                 <p class="text-gray-600">Business Coach</p>
               </div>
             </div>
-            <p class="text-gray-600">"The payment integration is seamless, and the real-time collaboration features have made it much easier to work with my clients."</p>
+            <p class="text-gray-600">"The real-time collaboration features make it easy to stay in sync with my clients. It's like having a virtual office that works 24/7."</p>
           </div>
 
           <div class="bg-white rounded-2xl shadow-lg p-8 hover-scale">
@@ -208,10 +208,10 @@
               </div>
               <div>
                 <h4 class="font-semibold text-gray-900">Emily Rodriguez</h4>
-                <p class="text-gray-600">Career Advisor</p>
+                <p class="text-gray-600">Life Coach</p>
               </div>
             </div>
-            <p class="text-gray-600">"As an admin, I love the analytics dashboard. It gives me valuable insights into session patterns and client engagement."</p>
+            <p class="text-gray-600">"The payment integration is seamless and professional. My clients appreciate the convenience, and I love the automated invoicing."</p>
           </div>
         </div>
       </div>

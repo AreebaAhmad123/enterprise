@@ -15,7 +15,9 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a", "Get Started"
     assert_select "a", "Sign In"
-    assert_select "a", "Register"
+    assert_select "a", "Sign in to Schedule"
+    assert_select "a", "Sign in to Comment"
+    assert_select "a", "Sign in to Pay"
   end
 
   test "should show user specific links when signed in" do

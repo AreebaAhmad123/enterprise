@@ -4,9 +4,11 @@ one:
   title: "First Meeting"
   description: "This is the first test meeting"
   start_time: <%= 1.day.from_now %>
-  end_time: <%= 1.day.from_now + 1.hour %>
+  duration: 60
   status: "scheduled"
-  user: one
+  client: one
+  consultant: two
+  amount: 50.00
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
@@ -14,8 +16,10 @@ two:
   title: "Second Meeting"
   description: "This is the second test meeting"
   start_time: <%= 2.days.from_now %>
-  end_time: <%= 2.days.from_now + 1.hour %>
+  duration: 60
   status: "scheduled"
-  user: two
+  client: two
+  consultant: one
+  amount: 50.00
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %> 

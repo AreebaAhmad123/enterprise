@@ -1,3 +1,4 @@
+require 'csv'
 class MeetingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_meeting, only: [:show, :edit, :update, :destroy, :pay, :process_payment, :cancel]
@@ -9,15 +10,34 @@ class MeetingsController < ApplicationController
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     @meetings = @user.client_meetings.or(@user.consultant_meetings)
 
-    if params[:start_date].present? && params[:end_date].present?
-      begin
-        start_date = Date.parse(params[:start_date])
-        end_date = Date.parse(params[:end_date])
-        @meetings = @meetings.for_calendar(start_date, end_date)
-      rescue ArgumentError
-        flash[:alert] = 'Invalid date range.'
-        @meetings = Meeting.none
-      end
+    # Apply filters
+    if params[:filter_user_id].present?
+      filtered_user = User.find(params[:filter_user_id])
+      @meetings = @meetings.where(client_id: filtered_user.id).or(@meetings.where(consultant_id: filtered_user.id))
+    end
+
+    # Handle calendar navigation
+    if params[:start_date].present?
+      @start_date = Date.parse(params[:start_date])
+    else
+      @start_date = Date.current.beginning_of_month
+    end
+
+    @end_date = if params[:end_date].present?
+                  Date.parse(params[:end_date])
+                else
+                  @start_date.end_of_month
+                end
+
+    # Set calendar date range
+    @calendar_start_date = @start_date.beginning_of_month
+    @calendar_end_date = @end_date.end_of_month
+
+    begin
+      @meetings = @meetings.for_calendar(@start_date, @end_date)
+    rescue ArgumentError
+      flash[:alert] = 'Invalid date range.'
+      @meetings = Meeting.none
     end
 
     # Ensure @meetings is never nil
@@ -112,13 +132,30 @@ class MeetingsController < ApplicationController
 
   def export_csv
     return redirect_to root_path, alert: 'Only consultants can export meetings.' unless current_user.consultant?
-    @meetings = Meeting.all
-    respond_to do |format|
-      format.csv do
-        headers['Content-Disposition'] = "attachment; filename=\"meetings-#{Date.today}.csv\""
-        headers['Content-Type'] ||= 'text/csv'
+    
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    @meetings = @user.client_meetings.or(@user.consultant_meetings)
+    
+    csv_data = CSV.generate do |csv|
+      csv << ['Title', 'Client', 'Consultant', 'Start Time', 'Duration (minutes)', 'Status', 'Cancellation Reason']
+      
+      @meetings.each do |meeting|
+        csv << [
+          meeting.title,
+          meeting.client&.email || 'Not assigned',
+          meeting.consultant&.email || 'Not assigned',
+          meeting.start_time.in_time_zone('Asia/Karachi').strftime('%Y-%m-%d %H:%M'),
+          meeting.duration,
+          meeting.status,
+          meeting.cancellation_reason
+        ]
       end
     end
+    
+    send_data csv_data, 
+              filename: "meetings-#{Date.today}.csv",
+              type: 'text/csv',
+              disposition: 'attachment'
   end
 
   private

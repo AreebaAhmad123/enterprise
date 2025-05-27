@@ -25,40 +25,64 @@
       <%= form_with url: user_meetings_path(@user), method: :get, class: 'grid grid-cols-1 md:grid-cols-4 gap-4' do |form| %>
         <div>
           <%= form.label :filter_user_id, 'User', class: 'block text-sm font-medium text-gray-700 mb-2 flex items-center' %>
-          <%= form.collection_select :filter_user_id, User.all, :id, :email, { include_blank: 'All Users' }, class: 'block w-full border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500' %>
+          <%= form.collection_select :filter_user_id, 
+              User.where("role = 'client' OR role = 'consultant'").order(:email), 
+              :id, 
+              :email, 
+              { include_blank: 'All Users', selected: params[:filter_user_id] }, 
+              class: 'block w-full border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500' %>
         </div>
         <div>
           <%= form.label :start_date, 'Start Date', class: 'block text-sm font-medium text-gray-700 mb-2 flex items-center' %>
-          <%= form.date_field :start_date, value: params[:start_date], class: 'block w-full border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500' %>
+          <%= form.date_field :start_date, 
+              value: params[:start_date], 
+              class: 'block w-full border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500' %>
         </div>
         <div>
           <%= form.label :end_date, 'End Date', class: 'block text-sm font-medium text-gray-700 mb-2 flex items-center' %>
-          <%= form.date_field :end_date, value: params[:end_date], class: 'block w-full border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500' %>
+          <%= form.date_field :end_date, 
+              value: params[:end_date], 
+              class: 'block w-full border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500' %>
         </div>
         <div class="flex items-end gap-2">
           <%= form.submit 'Apply Filters', class: 'bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition duration-300' %>
-          <%= link_to 'Export CSV', export_csv_meetings_path(format: :csv), class: 'bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition duration-300' %>
+          <%= link_to 'Clear Filters', user_meetings_path(@user), class: 'bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition duration-300' %>
+          <%= link_to 'Export CSV', export_csv_meetings_path(format: :csv, user_id: @user.id), class: 'bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition duration-300' %>
         </div>
       <% end %>
     </div>
   <% end %>
 
   <!-- Calendar View Toggle -->
-  <div class="mb-8 flex space-x-4">
-    <%= link_to 'Monthly View', user_meetings_path(@user, view: 'month'), class: "px-4 py-2 rounded-lg font-semibold transition duration-300 #{params[:view] != 'week' ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
-    <%= link_to 'Weekly View', user_meetings_path(@user, view: 'week'), class: "px-4 py-2 rounded-lg font-semibold transition duration-300 #{params[:view] == 'week' ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+  <div class="mb-8 flex justify-between items-center">
+    <div class="flex space-x-4">
+      <%= link_to 'Monthly View', user_meetings_path(@user, view: 'month', start_date: @calendar_start_date), class: "px-4 py-2 rounded-lg font-semibold transition duration-300 #{params[:view] != 'week' ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      <%= link_to 'Weekly View', user_meetings_path(@user, view: 'week', start_date: @calendar_start_date), class: "px-4 py-2 rounded-lg font-semibold transition duration-300 #{params[:view] == 'week' ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+    </div>
+    <div class="flex space-x-4">
+      <%= link_to user_meetings_path(@user, view: params[:view], start_date: @calendar_start_date.prev_month), class: "px-4 py-2 rounded-lg font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition duration-300" do %>
+        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      <% end %>
+      <%= link_to user_meetings_path(@user, view: params[:view], start_date: @calendar_start_date.next_month), class: "px-4 py-2 rounded-lg font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition duration-300" do %>
+        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      <% end %>
+    </div>
   </div>
 
   <!-- Calendar Display -->
   <div class="mb-12">
-    <% if @meetings.any? %>
-      <% if params[:view] == 'week' %>
-        <%= week_calendar(events: @meetings, attribute: :calendar_date, class: 'grid gap-4') do |date, meetings| %>
-          <div class="border border-gray-200 p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 <%= date.today? ? 'border-blue-500 bg-blue-50' : '' %>">
-            <strong class="text-sm font-semibold text-gray-800"><%= date.strftime('%a, %b %d') %></strong>
+    <% if params[:view] == 'week' %>
+      <%= week_calendar(events: @meetings, attribute: :calendar_date, start_date: @calendar_start_date, end_date: @calendar_end_date, class: 'grid gap-4') do |date, meetings| %>
+        <div class="border border-gray-200 p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 <%= date.today? ? 'border-blue-500 bg-blue-50' : '' %>">
+          <strong class="text-sm font-semibold text-gray-800"><%= date.strftime('%a, %b %d') %></strong>
+          <% if meetings.any? %>
             <% meetings.each do |meeting| %>
               <div class="text-sm mt-2 flex items-center <%= meeting.cancelled? ? 'text-red-600 line-through' : 'text-blue-600' %>">
-                <span class="mr-2"><%= meeting.start_time.in_time_zone('Asia/Karachi').strftime('%H:%M') %></span>
+                <span class="mr-2"><%= meeting.start_time.in_time_zone('Asia/Karachi').strftime('%H:%M') %> - <%= (meeting.start_time + meeting.duration.minutes).in_time_zone('Asia/Karachi').strftime('%H:%M') %></span>
                 <span class="flex-1">
                   <%= meeting.cancelled? ? "[Cancelled] #{meeting.title}" : meeting.title %>
                   <% if meeting.cancelled? %>
@@ -83,23 +107,27 @@
                 </div>
               </div>
             <% end %>
-            <% if Meeting.date_has_available_slots?(date) %>
-              <%= link_to new_user_meeting_path(@user, date: date), class: 'text-green-600 text-sm hover:text-green-700 mt-2 inline-flex items-center', data: { tippy_content: 'Book a new session' } do %>
-                <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Book
-              <% end %>
+          <% end %>
+          <% if Meeting.date_has_available_slots?(date) %>
+            <%= link_to new_user_meeting_path(@user, date: date), class: 'text-green-600 text-sm hover:text-green-700 mt-2 inline-flex items-center', data: { tippy_content: 'Book a new session' } do %>
+              <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              Book
             <% end %>
-          </div>
-        <% end %>
-      <% else %>
-        <%= month_calendar(events: @meetings, attribute: :calendar_date, class: 'grid gap-4') do |date, meetings| %>
-          <div class="border border-gray-200 p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 <%= date.today? ? 'border-blue-500 bg-blue-50' : '' %>">
-            <strong class="text-sm font-semibold text-gray-800"><%= date.strftime('%b %d') %></strong>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <%= month_calendar(events: @meetings, attribute: :calendar_date, start_date: @calendar_start_date, end_date: @calendar_end_date, class: 'grid gap-4') do |date, meetings| %>
+        <div class="border border-gray-200 p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 <%= date.today? ? 'border-blue-500 bg-blue-50' : '' %> <%= date.sunday? ? 'bg-gray-100 opacity-75' : '' %>">
+          <strong class="text-sm font-semibold text-gray-800"><%= date.strftime('%b %d') %></strong>
+          <% if date.sunday? %>
+            <div class="text-sm text-gray-500 mt-2">Not available</div>
+          <% elsif meetings.any? %>
             <% meetings.each do |meeting| %>
               <div class="text-sm mt-2 flex items-center <%= meeting.cancelled? ? 'text-red-600 line-through' : 'text-blue-600' %>">
-                <span class="mr-2"><%= meeting.start_time.in_time_zone('Asia/Karachi').strftime('%H:%M') %></span>
+                <span class="mr-2"><%= meeting.start_time.in_time_zone('Asia/Karachi').strftime('%H:%M') %> - <%= (meeting.start_time + meeting.duration.minutes).in_time_zone('Asia/Karachi').strftime('%H:%M') %></span>
                 <span class="flex-1">
                   <%= meeting.cancelled? ? "[Cancelled] #{meeting.title}" : meeting.title %>
                   <% if meeting.cancelled? %>
@@ -124,24 +152,17 @@
                 </div>
               </div>
             <% end %>
-            <% if Meeting.date_has_available_slots?(date) %>
-              <%= link_to new_user_meeting_path(@user, date: date), class: 'text-green-600 text-sm hover:text-green-700 mt-2 inline-flex items-center', data: { tippy_content: 'Book a new session' } do %>
-                <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Book
-              <% end %>
+          <% end %>
+          <% if Meeting.date_has_available_slots?(date) %>
+            <%= link_to new_user_meeting_path(@user, date: date), class: 'text-green-600 text-sm hover:text-green-700 mt-2 inline-flex items-center', data: { tippy_content: 'Book a new session' } do %>
+              <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              Book
             <% end %>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       <% end %>
-    <% else %>
-      <div class="text-center py-8">
-        <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <p class="text-gray-600 text-lg">No upcoming sessions. <%= link_to 'Book one now', new_user_meeting_path(@user), class: 'text-blue-600 hover:underline' %>.</p>
-      </div>
     <% end %>
   </div>
 

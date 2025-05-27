@@ -12,7 +12,10 @@ module Myapp
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.2
 
-    config.time_zone = "Central Time (US & Canada)"
+    # Set time zone to Pakistan
+    config.time_zone = "Asia/Karachi"
+    config.active_record.default_timezone = :local
+
     config.eager_load_paths << Rails.root.join("extras")
 
     # Session store configuration
